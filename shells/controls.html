@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<meta charset="utf8">
+<title>...</title>
+
+<script>
+    var view, url, idx = 1, count;
+    function $(query) { return document.querySelector(query)}
+    window.onload = function() {
+        var iframe = $("iframe");
+        url = window.location.hash.split("#")[1];
+        iframe.src = url;
+        iframe.onload = function() {
+            view = iframe.contentWindow;
+            view.postMessage("register", document.location);
+        }
+    }
+    window.onmessage = function(e) {
+        if (e.source === view) {
+            var args = JSON.parse(e.data);
+            if (args.method === "newslide") {
+                idx = ~~args.idx;
+                $("#slideidx").value = idx;
+                if (idx == 1) {
+                    $("#back").disabled = true;
+                } else {
+                    $("#back").disabled = false;
+                }
+                if (idx == count) {
+                    $("#forward").disabled = true;
+                } else {
+                    $("#forward").disabled = false;
+                }
+            }
+            if (args.method === "registered") {
+                count = args.count;
+                $("#slidecount").innerHTML = count;
+                $("#title").innerHTML = args.title;
+                document.title = args.title;
+            }
+        }
+    }
+    function back() { view.postMessage("back", document.location); }
+    function forward() { view.postMessage("forward", document.location); }
+    function setSlide(i) {view.postMessage("setSlide(" + i + ")", document.location); }
+
+    function popup() {
+        window.open(url,'','width=800,height=600,personalbar=0,toolbar=0,scrollbars=1,resizable=1');
+    }
+    window.onkeydown = function(e) {
+        // Don't intercept keyboard shortcuts
+        if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) {
+            return;
+        }
+        if ( e.keyCode == 37 // left arrow
+          || e.keyCode == 33 // page up
+        ) {
+            console.log("back");
+            e.preventDefault();
+            back();
+        }
+        if ( e.keyCode == 39 // right arrow
+          || e.keyCode == 34 // page down
+        ) {
+            e.preventDefault();
+            forward();
+        }
+        if ( e.keyCode == 32) {
+            e.preventDefault();
+            toggleContent();
+        }
+
+    }
+
+</script>
+
+<style>
+    html { height: 100%;}
+    body {
+        margin: 0;
+        background-color: black;
+        height: 100%;
+        display: -moz-box;
+        display: -webkit-box;
+        display: box;
+        -moz-box-orient: vertical;
+        -webkit-box-orient: vertical;
+        box-orient: vertical;
+        width: 100%;
+    }
+    iframe {
+        -moz-box-flex : 1;
+        -webkit-box-flex : 1;
+        box-flex : 1;
+        border: none;
+        width: 100%;
+        display: block;
+        /* For IE: */
+        height: 80%;
+    }
+
+    #title {
+        font-weight: normal;
+        font-family: monospace;
+        margin: 0px;
+        font-size: 19px;
+        text-align: left;
+    }
+    #title, #controls {
+        color: white;
+        padding: 5px;
+        position: relative;
+    }
+    #controls {
+        font-family: monospace;
+        font-size: 12px;
+        text-align: center;
+    }
+    #controls path { fill: white; }
+    #controls button[disabled] path {fill: #333;}
+    #forward {-moz-transform: scaleX(-1);-webkit-transform: scaleX(-1);-o-transform: scaleX(-1);-ms-transform: scaleX(-1);transform: scaleX(-1);}
+    button {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+    }
+    #slideidx {
+        border: none;
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white;
+        text-align: center;
+    }
+    #rightcontrols * { vertical-align: middle; }
+    #rightcontrols {
+        position: absolute;
+        top: -5px;
+        right: 10px;
+    }
+
+</style>
+
+<h1 id="title">...</h1>
+<iframe></iframe>
+<div id="controls">
+    <button id="back" onclick="back()">
+    <svg width="15px" height="15px" viewBox="0 0 50 50"><path d="M46.686,2.632L23.694,25.624l22.992,22.993H27.183L4.189,25.624 L27.183,2.632H46.686z"/></svg>
+    </button>
+    <button id="forward" onclick="forward()">
+    <svg width="15px" height="15px" viewBox="0 0 50 50"><path d="M46.686,2.632L23.694,25.624l22.992,22.993H27.183L4.189,25.624 L27.183,2.632H46.686z"/></svg>
+    </button>
+    <p id="rightcontrols"><input onchange="setSlide(this.value)" size="2" id="slideidx" value="0"></input>/<span id="slidecount">...</span>
+    <button id="popup" onclick="popup()"><svg width="15px" height="15px" viewBox="0 0 50 50"><path d="M10,0L10,40L50,40L50,0z M0,5L5,5L5,45L45,45L45,50L0,50Z"/></svg></button>
+    </p>
+</div>

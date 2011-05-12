@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<meta charset="utf8">
+<title>master</title>
+
+<link href='http://fonts.googleapis.com/css?family=Copse' rel='stylesheet' type='text/css'>
+
+<script> var URL = "slides.html"; </script>
+
+<script>
+    function $(query) { return document.querySelector(query)}
+    function $$(query) { return document.querySelectorAll(query)}
+    NodeList.prototype.forEach = function(fun) {
+        if (typeof fun !== "function") throw new TypeError();
+        for (var i = 0; i < this.length; i++) {
+            fun.call(this, this[i]);
+        }
+    }
+    var views = {}, notes, idx = 1;
+    function onload() {
+        var iframes = $$("iframe");
+        var operationsCount = iframes.length;
+        iframes.forEach(function(f) {
+            f.onload = function() {
+                operationsCount--;
+                if (operationsCount == 0) {
+                    iframesLoaded();
+                }
+            }
+            f.src = URL;
+        });
+        function iframesLoaded() {
+            views.present = document.querySelector("#present > iframe").contentWindow;
+            views.future = document.querySelector("#future > iframe").contentWindow;
+            views.present.postMessage("register", document.location);
+        }
+        notes = document.querySelector("#notes > #content");
+    }
+    function onmessage(e) {
+        if (e.source === views.present) {
+            var args = JSON.parse(e.data);
+            if (args.method === "newslide") {
+                idx = ~~args.idx;
+                notes.innerHTML = args.details
+                $$(".slideidx").forEach(function(p) {p.innerHTML = idx;});
+                $$(".nextslideidx").forEach(function(p) {p.innerHTML = idx + 1;});
+                views.future.postMessage("setSlide(" + (idx + 1) + ")", document.location);
+                if (views.remote) views.remote.postMessage("setSlide(" + idx + ")", document.location);
+            }
+            if (args.method === "registered") {
+                $$(".slidecount").forEach(function(p) {p.innerHTML = args.count;});
+            }
+        }
+    }
+    function back() { views.present.postMessage("back", document.location); }
+    function forward() { views.present.postMessage("forward", document.location); }
+    function toggleContent() {
+        views.present.postMessage("toggleContent", document.location);
+        views.remote.postMessage("toggleContent", document.location);
+    }
+    function onkeydown(e) {
+        // Don't intercept keyboard shortcuts
+        if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) {
+            return;
+        }
+        if ( e.keyCode == 37 // left arrow
+          || e.keyCode == 33 // page up
+        ) {
+            e.preventDefault();
+            back();
+        }
+        if ( e.keyCode == 39 // right arrow
+          || e.keyCode == 34 // page down
+        ) {
+            e.preventDefault();
+            forward();
+        }
+        if ( e.keyCode == 32) {
+            e.preventDefault();
+            toggleContent();
+        }
+
+    }
+    var start;
+    function startTimer() {
+        if (!start) {
+            start = new Date();
+            var minutesElt = $("#minutes");
+            var secondsElt = $("#seconds");
+            minutesElt.innerHTML = "00";
+            secondsElt.innerHTML = "00";
+            setInterval(function() {
+                var now = new Date();
+                var delta = now - start;
+                delta = ~~(delta / 1000)
+                seconds = delta % 60;
+                minutes = ~~(delta / 60);
+                if (seconds < 10) seconds = "0" + seconds;
+                if (minutes < 10) minutes = "0" + minutes;
+                secondsElt.innerHTML = seconds;
+                minutesElt.innerHTML = minutes;
+            }, 2000);
+        }
+    }
+
+    function openSlides() {
+        var windowObjectReference;
+        document.body.classList.add("slidesopen");
+        var strWindowFeatures = "resizable=yes";
+        views.remote = window.open(URL, "slides", strWindowFeatures);
+        setTimeout(function() {
+            views.remote.postMessage("setSlide(" + idx + ")", document.location);
+        }, 1000);
+    }
+</script>
+
+<style>
+    iframe {
+        pointer-events: none;
+        border: none;
+        width: 100%;
+        height: 80%;
+        outline: 4px solid black;
+    }
+
+    #present > h1, #future > h1, #notes h1 {
+        font-size: 20px;
+    }
+
+    #present {
+        width: 600px;
+        height: 600px;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        margin-left: -300px;
+    }
+    .slidesopen #present button {
+        display: none;
+    }
+
+    #future {
+        width: 250px;
+        height: 250px;
+        position: absolute;
+        top: 280px;
+        right: 40px;
+    }
+    body {
+        text-align: center;
+        background-image: -moz-linear-gradient(top, #253D61, #3A2137);
+        background-image: -webkit-linear-gradient(top, #253D61, #3A2137);
+        font-family: 'Copse', arial, serif;
+        overflow: hidden;
+    }
+    html, body {
+        height: 100%;
+        color: white;
+    }
+    button.forward {
+        -moz-transform: scaleX(-1);
+        -webkit-transform: scaleX(-1);
+    }
+    #controls {
+        width: 100%;
+        position: absolute;
+        bottom: 20px;
+        left: 0;
+        text-align: center;
+    }
+    #controls button {
+        background-color: transparent;
+        border: none;
+    }
+
+    #time {
+        position: absolute;
+        bottom: 0; right: 30px;
+        cursor: pointer;
+    }
+    #minutes { font-size: 30px; }
+    #seconds { opacity: 0.5; }
+
+    #notes {
+        position: absolute;
+        top: 40px; left: 20px;
+        width: 300px;
+        text-align: left;
+        background-color: rgba(50%, 50%, 50%, 0.7);
+        font-size: 30px;
+    }
+    #notes li {
+        margin-top: 20px;
+        font-size: 20px;
+    }
+</style>
+<div id="future">
+    <h1>Next slide: <span class="nextslideidx">n/a</span> of <span class="slidecount">n/a</span></h1>
+    <iframe></iframe>
+</div>
+
+<div id="controls">
+    <button class="back" onclick="back()">
+    <svg width="50px" height="50px" viewBox="0 0 50 50"><path fill="#fff" d="M46.686,2.632L23.694,25.624l22.992,22.993H27.183L4.189,25.624 L27.183,2.632H46.686z"/></svg>
+    </button>
+
+    <button class="forward" onclick="forward()">
+    <svg width="50px" height="50px" viewBox="0 0 50 50"><path fill="#fff" d="M46.686,2.632L23.694,25.624l22.992,22.993H27.183L4.189,25.624 L27.183,2.632H46.686z"/></svg>
+    </button>
+</div>
+
+<div id="time">
+    <p onclick="startTimer()"><span id="minutes">00</span>:<span id="seconds">00<br>Click to start the timer</span></p>
+</div>
+
+<div id="present">
+    <h1>Current slide: <span class="slideidx">n/a</span> of <span class="slidecount">n/a</span></h1>
+    <iframe></iframe>
+    <button onclick="openSlides()">Click to open the presentation</button>
+</div>
+
+
+<div id="notes">
+    <p id="content"></p>
+</div>
+
+
+
