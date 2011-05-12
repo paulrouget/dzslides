@@ -1,12 +1,10 @@
-What is DZSlides?
-=================
+Yo,
 
-DZSlides is a HTML **template** to build **slides** in HTML5 and CSS3.
+    DZSlides is a HTML template to build slides in HTML5 and CSS3.
+    template.html is the only file you need.
+    Shells are extensions. You don't need them for a basic usages.
+    For a complete presentation, see: http://paulrouget.com/dzslides.
 
-Download *template.html*, and start editing it. That's all you need.
+    See examples/readme/slides.html to start.
 
-For a complete presentation, see: http://paulrouget.com/dzslides.
-
-See **examples/readme/slides.html** to start.
-
-**Shells** are extensions. You don't need them for a basic usages.
+-- @paulrouget
