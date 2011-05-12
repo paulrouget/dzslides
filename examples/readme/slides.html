@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+
+<meta charset="utf-8">
+<title>Introduction to DZSlides</title>
+
+<!-- Your Slides -->
+<!-- One section is one slide -->
+
+<section>
+    <h1>Build your slides in <strong>HTML5</strong> and <strong>CSS3</strong> with <strong>DZSlides</strong>.</h1>
+    <footer>by <a href="http://twitter.com/paulrouget">@paulrouget</a>.</footer>
+</section>
+
+<section class="chapter">
+    <h1>HTML5 and CSS3?</h1>
+</section>
+
+<section>
+    <h2>What are slides <strong>made</strong> of?</h2>
+    <ul>
+        <li>Text
+        <li>Images
+        <li>Videos
+    </ul>
+    <video src="http://people.mozilla.com/~prouget/blog/big_buck_bunny.webm"></video>
+    <h2><strong>HTML5</strong> can do that.</h2>
+</section>
+
+<section>
+    <h2>How slides <strong>behave</strong>?</h2>
+    <ul>
+        <li>Transitions
+        <li>Resolution independant
+    </ul>
+    <span id="arrow">◰</span>
+    <h2><strong>CSS3</strong> can do that.</h2>
+</section>
+
+<section class="chapter">
+    <h1>What is DZSlides?</h1>
+</section>
+
+<section>
+    <h2><strong>One</strong> single HTML file.</h2>
+    <svg style="margin: 50px auto 0 auto; display: block;" width="200px" height="300px">
+        <path stroke="#FFFFFF" fill="none" stroke-width="5" d="M50 10 h 140 v 280 h -180 v -240 z M 50 10 v 40 h -40 "/>
+    </svg>
+</section>
+
+<section>
+    <h2>A HTML <strong>template</strong>.</h2>
+    <p>That brings all the needed features to transform a simple HTML5 page into a presentation.</p>
+</section>
+
+
+<section class="code">
+    <style>
+        /* Output from Vim: :TOhtml */
+        pre { margin: 20px 0 0 40px;font-size: 15px; font-weight: bold;}
+        .Constant { color: #af5fff}
+        .StorageClass { color: #ff8700}
+        .Exception { color: #87ff00}
+        .Identifier { color: #ff8700}
+        .Title { color: #d75f00}
+        .String { color: #afaf87}
+        .Type { color: #5fd7ff}
+        .Statement { color: #d7005f}
+        .Function { color: #87ff00}
+        .Comment { color: #CCC}
+    </style>
+    <pre>
+    <span class="Comment">&lt;!DOCTYPE html&gt;</span>
+
+    <span class="Function">&lt;</span><span class="Statement">meta</span><span class="Function"> </span><span class="Type">charset</span><span class="Function">=</span><span class="String">&quot;utf-8&quot;</span><span class="Function">&gt;</span>
+    <span class="Function">&lt;</span><span class="Statement">title</span><span class="Function">&gt;</span><span class="Title">The Title Of Your Presentation</span><span class="Identifier">&lt;/</span><span class="Statement">title</span><span class="Identifier">&gt;</span>
+
+    <span class="Comment">&lt;!</span><span class="Comment">-- Your Slides (one slide == one section) --</span><span class="Comment">&gt;</span>
+
+    <span class="Function">&lt;</span><span class="Statement">section</span><span class="Function">&gt;</span>
+        <span class="Function">&lt;</span><span class="Statement">h1</span><span class="Function">&gt;</span><span class="Title">My presentation</span><span class="Identifier">&lt;/</span><span class="Statement">h1</span><span class="Identifier">&gt;</span>
+    <span class="Identifier">&lt;/</span><span class="Statement">section</span><span class="Identifier">&gt;</span>
+
+    <span class="Function">&lt;</span><span class="Statement">section</span><span class="Function">&gt;</span>
+        <span class="Function">&lt;</span><span class="Statement">h2</span><span class="Function">&gt;</span><span class="Title">Will blow your mind.</span><span class="Identifier">&lt;/</span><span class="Statement">h2</span><span class="Identifier">&gt;</span>
+        <span class="Function">&lt;</span><span class="Statement">p</span><span class="Function">&gt;</span>And this is why:<span class="Identifier">&lt;/</span><span class="Statement">p</span><span class="Identifier">&gt;</span>
+    <span class="Identifier">&lt;/</span><span class="Statement">section</span><span class="Identifier">&gt;</span>
+
+    <span class="Comment">&lt;!</span><span class="Comment">-- Your Style --</span><span class="Comment">&gt;</span>
+
+    <span class="Function">&lt;</span><span class="Exception">style</span><span class="Function">&gt;</span>
+    <span class="Statement">section</span> <span class="Function">{</span>
+        <span class="StorageClass">background</span>: <span class="Constant">black</span>;
+        <span class="StorageClass">color</span>: <span class="Constant">white</span>;
+    <span class="Function">}</span>
+    <span class="Statement">h1</span> <span class="Function">{</span>
+        <span class="StorageClass">color</span>: <span class="Constant">yellow</span>;
+    <span class="Function">}</span>
+    <span class="Identifier">&lt;/</span><span class="Exception">style</span><span class="Identifier">&gt;</span>
+
+    <span class="Comment">&lt;!</span><span class="Comment">-- CORE v2.0b:  --</span><span class="Comment">&gt;</span>
+    <span class="Comment">&lt;!</span><span class="Comment">-- Some Code You Don't Have To Look At --</span><span class="Comment">&gt;</span>
+         <span class="Comment">...<span>
+    </pre>
+</section>
+
+<section class="chapter">
+    <h1>Pros and Cons</h1>
+</section>
+
+<section>
+    <h2>Pros</h2>
+    <ul>
+        <li>Simple
+        <li>Hackable
+        <li>Accessible
+        <li>Standalone
+        <li>Easy to share
+        <li>Easy to build on top of
+        <li>It's cooler than keynote
+    </ul>
+</section>
+
+<section>
+    <h2>Cons</h2>
+    <ul>
+        <li>No authoring tool
+        <li>Some browsers don't like it
+    </ul>
+</section>
+
+<section class="chapter">
+    <h1>The shells</h1>
+</section>
+
+<section>
+    <q>Because I want to keep the whole mechanism in one single web page, the features are quite limited.</q>
+</section>
+
+<section>
+    <h2>A Shell is an <strong>extension</strong> for DZSlides.</h2>
+    <p>A Shell is a web page that <strong>embeds</strong> a presentation and adds a feature to it.</p>
+    <p>The Shell and the Presentation communicate with <strong>postMessage</strong>.</p>
+</section>
+
+<section>
+    <h1>Examples</h1>
+</section>
+
+<section>
+    <h2>controls.html</h2>
+    <p>adds controls (back, forward), and a slide count. Useful if you want to embed the slides in a blog post.</p>
+</section>
+
+<section>
+    <h2>master.html</h2>
+    <p>Show the current slide, the next slide, a time counter and controls another opened presentation (fullscreen).
+    Also displays the hidden notes from the slides (in the &lt;details> tag). Perfect during a live presentation.</p>
+</section>
+
+<section class="chapter">
+    <h1>How to start</h1>
+</section>
+
+<section>
+    <h2>Read the source</h2>
+    <p>Download the template, read it. Look at the examples. There's no "rules".</p>
+    <p><strong>It's as unlimited as the web is.</strong></p>
+    <footer>by <a href="http://twitter.com/paulrouget">@paulrouget</a>.</footer>
+</section>
+
+<!-- Style -->
+
+<link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'>
+<style>
+  html { background-color: black; }
+  a { color: #FF0066; } a:hover {text-decoration: underline;}
+  footer { position: absolute; bottom: 50px; right: 50px; }
+  strong {color: #FF0066}
+  body {
+      font-family: 'Oswald', arial, serif;
+      background-color: white;
+      color: white;
+      font-size: 2em;
+      background: #1C1C1C;
+      background-image: -moz-radial-gradient(center 45deg, #333 0%, #1C1C1C 50%);
+      background-image: -moz-radial-gradient(center 45deg, #333 0%, #1C1C1C 50%);
+  }
+
+
+  /* Transition effect */
+  section {
+      -moz-transition: left 400ms linear 0s;
+      -webkit-transition: left 400ms linear 0s;
+      -o-transition: left 400ms linear 0s;
+      -ms-transition: left 400ms linear 0s;
+      transition: left 400ms linear 0s;
+  }
+  section { left: -150%; }
+  section[aria-selected] { left: 0; }
+  section[aria-selected] ~ section { left: +150% }
+
+  .chapter { background-color: black;}
+  .chapter h1 {line-height: 600px; vertical-align: middle; margin: 0; text-align: center; display: block}
+
+  h1 {
+      margin: 50px 100px 0 100px;
+      font-size: 50px;
+      text-shadow: 0px -1px 0px #000;
+      text-align: left;
+  }
+  h2 {
+      color: #FAE50B;
+      margin: 70px 0 0 0;
+      font-size: 40px;
+      text-align: center;
+  }
+  ul {
+      margin-top: 70px;
+      font-size: 35px;
+      text-align: right;
+      border-right: 4px solid white;
+      padding-right: 40px;
+      min-width: 310px;
+      margin-left: 50px;
+      display: inline-block;
+  }
+  q, p {
+      margin: 50px auto 0 auto;
+      width: 500px;
+  }
+  q:after {content: ""}
+  q:before {content: ""}
+  q {
+      display: block;
+      margin-top: 140px;
+  }
+  video {
+      position: absolute;
+      top: 210px;
+      width: 260px;
+      left: 445px;
+      box-shadow: 0 0 10px black;
+  }
+  #arrow {
+      position: absolute;
+      top: 165px;
+      left: 460px;
+      font-size: 100px;
+      color: white;
+
+  }
+  li {list-style-type: none}
+
+</style>
+
+
+<!-- {{{{ *************************  CORE  ********************************* -->
+<!-- *********************************************************************** -->
+<!-- *********************************************************************** -->
+<!-- *********************************************************************** -->
+<!-- *********************************************************************** -->
+
+<!-- This block of code is not supposed to be edited, but if you want to change the behavior of the slides, feel free to hack it ;) -->
+
+<!-- Default Style -->
+<style>
+  * { margin: 0; padding: 0; }
+  details {display: none;}
+  body {
+    width: 800px; height: 600px;
+    margin-left: -400px; margin-top: -300px;
+    position: absolute; top: 50%; left: 50%;
+    overflow: hidden;
+  }
+  section {
+    position: absolute;
+    pointer-events: none;
+    width: 100%; height: 100%;
+  }
+  section[aria-selected] { pointer-events: auto;}
+  body {display: none}
+  body.loaded {display: block}
+</style>
+
+<script>
+  var friendWindows = [];
+  var idx = 1;
+  var slides;
+
+  /* main() */
+
+  window.onload = function() {
+    slides = document.querySelectorAll("body > section");
+    onhashchange();
+    setSlide();
+    document.body.className = "loaded";
+    onresize();
+  }
+
+  /* Handle keys */
+
+  window.onkeydown = function(e) {
+    // Don't intercept keyboard shortcuts
+    if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) {
+      return;
+    }
+    if ( e.keyCode == 37 // left arrow
+      || e.keyCode == 33 // page up
+    ) {
+      e.preventDefault();
+      back();
+    }
+    if ( e.keyCode == 39 // right arrow
+      || e.keyCode == 34 // page down
+    ) {
+      e.preventDefault();
+      forward();
+    }
+
+    if ( e.keyCode == 32) { // space
+        e.preventDefault();
+        toggleContent();
+    }
+  }
+
+  /* Adapt the size of the slides to the window */
+
+  window.onresize = function() {
+    var sx = document.body.clientWidth / window.innerWidth;
+    var sy = document.body.clientHeight / window.innerHeight;
+    var transform = "scale(" + (1/Math.max(sx, sy)) + ")";
+    document.body.style.MozTransform = transform;
+    document.body.style.WebkitTransform = transform;
+    document.body.style.OTransform = transform;
+    document.body.style.msTransform = transform;
+    document.body.style.transform = transform;
+  }
+  function getDetails(idx) {
+    var s = document.querySelector("section:nth-of-type("+ idx +")");
+    var d = s.querySelector("details");
+    return d?d.innerHTML:"";
+  }
+  window.onmessage = function(e) {
+    msg = e.data;
+    win = e.source;
+    if (msg === "register") {
+      friendWindows.push(win);
+      win.postMessage(JSON.stringify({method: "registered", title: document.title, count: slides.length}), document.location);
+      win.postMessage(JSON.stringify({method: "newslide", details: getDetails(idx), idx: idx}), document.location);
+      return;
+    }
+    if (msg === "back") back();
+    if (msg === "forward") forward();
+    if (msg === "toggleContent") toggleContent();
+    // setSlide(42)
+    var r = /setSlide\((\d+)\)/.exec(msg);
+    if (r) {
+        idx = r[1];
+        setSlide();
+    }
+  }
+
+  /* If a Video is present in this new slide, play it.
+     If a Video si present in the previous slide, stop it. */
+
+  function toggleContent() {
+    var s = document.querySelector("section[aria-selected]");
+    if (s) {
+        var video = s.querySelector("video");
+        if (video) {
+            if (video.ended || video.paused) {
+                video.play();
+            } else {
+                video.pause();
+            }
+        }
+    }
+  }
+
+  /* If the user change the slide number in the URL bar, jump
+     to this slide. */
+
+  window.onhashchange = function(e) {
+    var newidx = ~~window.location.hash.split("#")[1];
+    if (!newidx) newidx = 1;
+    if (newidx == idx) return;
+    idx = newidx;
+    setSlide();
+  }
+
+  /* Slide controls */
+
+  function back() {
+    if (idx == 1) return;
+    idx--;
+    setSlide();
+  }
+  function forward() {
+    if (idx >= slides.length) return;
+    idx++;
+    setSlide();
+  }
+  function setSlide() {
+    var old = document.querySelector("section[aria-selected]");
+    var next = document.querySelector("section:nth-of-type("+ idx +")");
+    if (old) {
+      old.removeAttribute("aria-selected");
+      var video = old.querySelector("video");
+      if (video) { video.pause(); }
+    }
+    if (next) {
+      next.setAttribute("aria-selected", "true");
+      var video = next.querySelector("video");
+      if (video) { video.play(); }
+    } else {
+      console.warn("No such slide: " + idx);
+      idx = 0;
+      for (var i = 0; i < slides.length; i++) {
+          if (slides[i].hasAttribute("aria-selected")) {
+              idx = i + 1;
+          }
+      }
+    }
+    window.location.hash = idx;
+    for (var i = 0; i < friendWindows.length; i++) {
+        friendWindows[i].postMessage(JSON.stringify({method: "newslide", details: getDetails(idx), idx: idx}), document.location);
+    }
+  }
+</script>
+<!-- vim: set fdm=marker: }}} -->
