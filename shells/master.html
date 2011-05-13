@@ -4,8 +4,6 @@
 
 <link href='http://fonts.googleapis.com/css?family=Copse' rel='stylesheet' type='text/css'>
 
-<script> var URL = "slides.html"; </script>
-
 <script>
     function $(query) { return document.querySelector(query)}
     function $$(query) { return document.querySelectorAll(query)}
@@ -15,7 +13,7 @@
             fun.call(this, this[i]);
         }
     }
-    var views = {}, notes, idx = 1;
+    var views = {}, url, notes, idx = 1;
     function onload() {
         var iframes = $$("iframe");
         var operationsCount = iframes.length;
@@ -26,7 +24,8 @@
                     iframesLoaded();
                 }
             }
-            f.src = URL;
+            url = window.location.hash.split("#")[1];
+            f.src = url;
         });
         function iframesLoaded() {
             views.present = document.querySelector("#present > iframe").contentWindow;
@@ -106,7 +105,7 @@
         var windowObjectReference;
         document.body.classList.add("slidesopen");
         var strWindowFeatures = "resizable=yes";
-        views.remote = window.open(URL, "slides", strWindowFeatures);
+        views.remote = window.open(url, "slides", strWindowFeatures);
         setTimeout(function() {
             views.remote.postMessage("setSlide(" + idx + ")", document.location);
         }, 1000);
@@ -182,11 +181,11 @@
 
     #notes {
         position: absolute;
-        top: 40px; left: 20px;
-        width: 300px;
+        top: 50px; left: 20px;
+        width: 270px;
         text-align: left;
         background-color: rgba(50%, 50%, 50%, 0.7);
-        font-size: 30px;
+        font-size: 20px;
     }
     #notes li {
         margin-top: 20px;
