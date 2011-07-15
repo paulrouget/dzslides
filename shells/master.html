@@ -111,6 +111,9 @@
             views.remote.postMessage("setSlide(" + idx + ")", document.location);
         }, 1000);
     }
+    window.addEventListener("load", onload, false);
+    window.addEventListener("message", onmessage, false);
+    window.addEventListener("keydown", onkeydown, false);
 </script>
 
 <style>
