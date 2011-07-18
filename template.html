@@ -123,12 +123,14 @@
       return;
     }
     if ( e.keyCode == 37 // left arrow
+      || e.keyCode == 38 // up arrow
       || e.keyCode == 33 // page up
     ) {
       e.preventDefault();
       back();
     }
     if ( e.keyCode == 39 // right arrow
+      || e.keyCode == 40 // down arrow
       || e.keyCode == 34 // page down
     ) {
       e.preventDefault();
