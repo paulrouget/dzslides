@@ -53,20 +53,8 @@
   }
   function back() { views.present.postMessage("back", document.location); }
   function forward() { views.present.postMessage("forward", document.location); }
-  function goToSlide(gotoidx) {
-    gotoidx = parseInt(gotoidx);
-    var current = parseInt($$('.slideidx')[0].innerHTML);
-    var max = parseInt($$('.slidecount')[0].innerHTML);
-    if (gotoidx > max)
-      return;
-    var diff = gotoidx - current;
-    if (diff > 0)
-      for(var i = 0; i < diff; i++)
-        forward();
-    if (diff < 0)
-      for(var i = 0; i < -diff; i++)
-        back();
-  }
+  function setSlide(i) {views.present.postMessage("setSlide(" + i + ")", document.location); }
+  
   function toggleContent() {
     views.present.postMessage("toggleContent", document.location);
     views.remote.postMessage("toggleContent", document.location);
@@ -265,7 +253,7 @@
   <iframe></iframe>
 </div>
 
-<div class="slideidx" onclick="var gotoidx=prompt('Go to slide...','1');goToSlide(gotoidx);">?</div>
+<div class="slideidx" onclick="var gotoidx=prompt('Go to slide...','1');setSlide(gotoidx);">?</div>
 <div class="nextslideidx">?</div>
 
 <div id="notes">
