@@ -3,25 +3,12 @@ Yo,
     DZSlides is a HTML template to build slides in HTML5 and CSS3.
     'template.html' is the only file you need.
     Shells are extensions. You don't need them for a basic usage.
-    For a complete presentation, see: http://paulrouget.com/dzslides.
-
-    See 'examples/readme/slides.html' to start.
 
     The project contains two shells to handle your slides :
 
-    * 'shells/controls.html'
-    * 'shells/master.html'
+    * 'shells/embedder.html' to embed a presentation in a web page
+    * 'shells/onstage.html' to show your slides with a control panel
 
-    To use 'shells/controls.html', you need to put slides url after 
-    controls.html page url. Example :
-
-    http://localhost/dzslides/shells/controls.html#../examples/tmnt/slides.html
-
-    
-    To use 'shells/master.html' you need to set your slides url in URL variable.
-    
-    Example : open 'master.html' file and change this line :
-
-    <script> var URL = "../examples/tmnt/slides.html"; </script>
+    For a complete presentation, see: http://paulrouget.com/dzslides.
 
 -- @paulrouget
