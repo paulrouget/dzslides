@@ -8,12 +8,19 @@
     window.onload = function() {
         var iframe = $("iframe");
         url = window.location.hash.split("#")[1];
+        if (!url) {
+          url = "<style>body{background-color:white;color:blacl}</style>";
+          url += "<strong>ERROR:</strong> No URL specified.<br>"
+          url += "Try<em>: controls.html#yourslides.html</em>"
+          url = "data:text/html," + encodeURIComponent(url);
+        }
         iframe.src = url;
         iframe.onload = function() {
             view = iframe.contentWindow;
             view.postMessage("register", document.location);
         }
     }
+    window.onhashchange = window.onload;
     window.onmessage = function(e) {
         if (e.source === view) {
             var args = JSON.parse(e.data);
@@ -91,6 +98,7 @@
         -moz-box-flex : 1;
         -webkit-box-flex : 1;
         box-flex : 1;
+        background-color: white;
         border: none;
         width: 100%;
         display: block;
