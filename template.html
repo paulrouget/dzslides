@@ -114,6 +114,7 @@
     onhashchange();
     setSlide();
     document.body.className = "loaded";
+    setupTouchEvents();
     onresize();
   }
 
@@ -142,6 +143,39 @@
     if ( e.keyCode == 32) { // space
         e.preventDefault();
         toggleContent();
+    }
+  }
+
+  /* Touch Events */
+
+  function setupTouchEvents() {
+    var orgX, orgY;
+    var newX, newY;
+
+    var body = document.body;
+    body.addEventListener("touchstart", start, false);
+    body.addEventListener("touchmove", move, false);
+    body.addEventListener("touchend", end, false);
+
+    function start(e) {
+      e.preventDefault();
+      orgX = e.changedTouches[0].pageX;
+      orgY = e.changedTouches[0].pageY;
+    }
+
+    function move(e) {
+      newX = e.changedTouches[0].pageX;
+      newY = e.changedTouches[0].pageY;
+    }
+
+    function end(e) {
+      if (orgX - newX > 10) {
+        forward();
+      } else {
+        if (orgX - newY < 10) {
+          back();
+        }
+      }
     }
   }
 
