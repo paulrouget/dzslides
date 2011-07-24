@@ -167,8 +167,8 @@
     win = e.source;
     if (msg === "register") {
       friendWindows.push(win);
-      win.postMessage(JSON.stringify({method: "registered", title: document.title, count: slides.length}), document.location);
-      win.postMessage(JSON.stringify({method: "newslide", details: getDetails(idx), idx: idx}), document.location);
+      win.postMessage(JSON.stringify({method: "registered", title: document.title, count: slides.length}), "*");
+      win.postMessage(JSON.stringify({method: "newslide", details: getDetails(idx), idx: idx}), "*");
       return;
     }
     if (msg === "back") back();
@@ -245,7 +245,7 @@
     }
     window.location.hash = idx;
     for (var i = 0; i < friendWindows.length; i++) {
-        friendWindows[i].postMessage(JSON.stringify({method: "newslide", details: getDetails(idx), idx: idx}), document.location);
+        friendWindows[i].postMessage(JSON.stringify({method: "newslide", details: getDetails(idx), idx: idx}), "*");
     }
   }
 </script>

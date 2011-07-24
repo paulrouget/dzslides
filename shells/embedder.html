@@ -21,7 +21,7 @@
     iframe.src = url;
     iframe.onload = function() {
       view = iframe.contentWindow;
-      view.postMessage("register", document.location);
+      view.postMessage("register", "*");
     }
   }
   window.onhashchange = window.onload;
@@ -50,9 +50,9 @@
       }
     }
   }
-  function back() { view.postMessage("back", document.location); }
-  function forward() { view.postMessage("forward", document.location); }
-  function setSlide(i) {view.postMessage("setSlide(" + i + ")", document.location); }
+  function back() { view.postMessage("back", "*"); }
+  function forward() { view.postMessage("forward", "*"); }
+  function setSlide(i) {view.postMessage("setSlide(" + i + ")", "*"); }
 
   function popup() {
     window.open(url + "#" + idx,'','width=800,height=600,personalbar=0,toolbar=0,scrollbars=1,resizable=1');

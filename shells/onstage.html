@@ -40,7 +40,7 @@
     function iframesLoaded() {
       views.present = $("#present > iframe").contentWindow;
       views.future = $("#future > iframe").contentWindow;
-      views.present.postMessage("register", document.location);
+      views.present.postMessage("register", "*");
     }
     notes = $("#notes > #content");
     startClock();
@@ -55,21 +55,21 @@
         notes.innerHTML = args.details
         $$(".slideidx").forEach(function(p) {p.innerHTML = idx;});
         $$(".nextslideidx").forEach(function(p) {p.innerHTML = idx + 1;});
-        views.future.postMessage("setSlide(" + (idx + 1) + ")", document.location);
-        if (views.remote) views.remote.postMessage("setSlide(" + idx + ")", document.location);
+        views.future.postMessage("setSlide(" + (idx + 1) + ")", "*");
+        if (views.remote) views.remote.postMessage("setSlide(" + idx + ")", "*");
       }
       if (args.method === "registered") {
         $$(".slidecount").forEach(function(p) {p.innerHTML = args.count;});
       }
     }
   }
-  function back() {views.present.postMessage("back", document.location); }
-  function forward() {views.present.postMessage("forward", document.location); }
-  function setSlide(i) {views.present.postMessage("setSlide(" + i + ")", document.location); }
+  function back() {views.present.postMessage("back", "*"); }
+  function forward() {views.present.postMessage("forward", "*"); }
+  function setSlide(i) {views.present.postMessage("setSlide(" + i + ")", "*"); }
 
   function toggleContent() {
-    views.present.postMessage("toggleContent", document.location);
-    views.remote.postMessage("toggleContent", document.location);
+    views.present.postMessage("toggleContent", "*");
+    views.remote.postMessage("toggleContent", "*");
   }
   function onkeydown(e) {
     // Don't intercept keyboard shortcuts
