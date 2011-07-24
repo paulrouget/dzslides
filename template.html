@@ -149,30 +149,28 @@
   /* Touch Events */
 
   function setupTouchEvents() {
-    var orgX, orgY;
-    var newX, newY;
+    var orgX, newX;
+    var tracking = false;
 
     var body = document.body;
     body.addEventListener("touchstart", start, false);
     body.addEventListener("touchmove", move, false);
-    body.addEventListener("touchend", end, false);
 
     function start(e) {
       e.preventDefault();
+      tracking = true;
       orgX = e.changedTouches[0].pageX;
-      orgY = e.changedTouches[0].pageY;
     }
 
     function move(e) {
+      if (!tracking) return;
       newX = e.changedTouches[0].pageX;
-      newY = e.changedTouches[0].pageY;
-    }
-
-    function end(e) {
-      if (orgX - newX > 10) {
+      if (orgX - newX > 100) {
+        tracking = false;
         forward();
       } else {
-        if (orgX - newY < 10) {
+        if (orgX - newX < -100) {
+          tracking = false;
           back();
         }
       }
