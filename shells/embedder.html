@@ -11,7 +11,7 @@
     if (!u) {
       u = window.prompt("What is the URL of the slides?");
       if (u) {
-        window.location.hash = u;
+        window.location.hash = u.split("#")[0];
         return u;
       }
       u= "<style>body{background-color:white;color:black}</style>";
