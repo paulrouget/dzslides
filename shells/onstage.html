@@ -16,7 +16,11 @@
   function getURL() {
     var u = window.location.hash.split("#")[1];
     if (!u) {
-      u= "<style>body{background-color:white;color:blacl}</style>";
+      u = window.prompt("What is the URL of the slides?");
+      if (u) {
+        return u;
+      }
+      u= "<style>body{background-color:white;color:black}</style>";
       u+= "<strong>ERROR:</strong> No URL specified.<br>"
       u+= "Try<em>: " + document.location + "#yourslides.html</em>"
       u= "data:text/html," + encodeURIComponent(u);
@@ -27,6 +31,7 @@
   window.onload = function() {
     var iframes = $$("iframe");
     var operationsCount = iframes.length;
+    url = getURL();
     iframes.forEach(function(f) {
       f.onload = function() {
         operationsCount--;
@@ -34,7 +39,6 @@
           iframesLoaded();
         }
       }
-      url = getURL();
       f.src = url;
     });
     function iframesLoaded() {

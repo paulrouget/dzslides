@@ -5,9 +5,14 @@
 <script>
   var view, url, idx = 1, count;
   function $(query) { return document.querySelector(query)}
+
   function getURL() {
     var u = window.location.hash.split("#")[1];
     if (!u) {
+      u = window.prompt("What is the URL of the slides?");
+      if (u) {
+        return u;
+      }
       u= "<style>body{background-color:white;color:black}</style>";
       u+= "<strong>ERROR:</strong> No URL specified.<br>"
       u+= "Try<em>: " + document.location + "#yourslides.html</em>"
@@ -15,6 +20,7 @@
     }
     return u;
   }
+
   window.onload = function() {
     var iframe = $("iframe");
     url = getURL();
