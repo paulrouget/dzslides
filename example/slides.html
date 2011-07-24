@@ -252,7 +252,6 @@
 
 </style>
 
-
 <!-- {{{{ *****************  DZSlides CORE 2.0b1 *************************** -->
 <!-- *********************************************************************** -->
 <!-- *********************************************************************** -->
@@ -269,6 +268,7 @@
     width: 800px; height: 600px;
     margin-left: -400px; margin-top: -300px;
     position: absolute; top: 50%; left: 50%;
+    overflow: hidden;
   }
   html {
     overflow: hidden;
@@ -371,7 +371,7 @@
     if (s) {
         var video = s.querySelector("video");
         if (video) {
-            if (video.ended || video.paused) {
+            if (video.ended || video.paused) {
                 video.play();
             } else {
                 video.pause();
