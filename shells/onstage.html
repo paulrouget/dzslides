@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<meta charset="utf8">
+<title>DZSlides</title>
+
+<script>
+  function $(query) { return document.querySelector(query)}
+  function $$(query) { return document.querySelectorAll(query)}
+  NodeList.prototype.forEach = function(fun) {
+    if (typeof fun !== "function") throw new TypeError();
+    for (var i = 0; i < this.length; i++) {
+      fun.call(this, this[i]);
+    }
+  }
+  var views = {}, notes, url, idx = 1;
+
+  function getURL() {
+    var u = window.location.hash.split("#")[1];
+    if (!u) {
+      u = window.prompt("What is the URL of the slides?");
+      if (u) {
+        window.location.hash = u.split("#")[0];
+        return u;
+      }
+      u= "<style>body{background-color:white;color:black}</style>";
+      u+= "<strong>ERROR:</strong> No URL specified.<br>"
+      u+= "Try<em>: " + document.location + "#yourslides.html</em>"
+      u= "data:text/html," + encodeURIComponent(u);
+    }
+    return u;
+  }
+
+  window.onload = function() {
+    var iframes = $$("iframe");
+    var operationsCount = iframes.length;
+    url = getURL();
+    iframes.forEach(function(f) {
+      f.onload = function() {
+        operationsCount--;
+        if (operationsCount == 0) {
+          iframesLoaded();
+        }
+      }
+      f.src = url;
+    });
+    function iframesLoaded() {
+      views.present = $("#present > iframe").contentWindow;
+      views.future = $("#future > iframe").contentWindow;
+      views.present.postMessage("register", "*");
+    }
+    notes = $("#notes > #content");
+    startClock();
+  }
+  window.onhashchange = window.onload;
+
+  window.onmessage = function(e) {
+    if (e.source === views.present) {
+      var args = JSON.parse(e.data);
+      if (args.method === "newslide") {
+        idx = ~~args.idx;
+        notes.innerHTML = args.details
+        $$(".slideidx").forEach(function(p) {p.innerHTML = idx;});
+        $$(".nextslideidx").forEach(function(p) {p.innerHTML = idx + 1;});
+        views.future.postMessage("setSlide(" + (idx + 1) + ")", "*");
+        if (views.remote) views.remote.postMessage("setSlide(" + idx + ")", "*");
+      }
+      if (args.method === "registered") {
+        $$(".slidecount").forEach(function(p) {p.innerHTML = args.count;});
+      }
+    }
+  }
+
+  function back() {views.present.postMessage("back", "*"); }
+  function forward() {views.present.postMessage("forward", "*"); }
+  function setSlide(i) {views.present.postMessage("setSlide(" + i + ")", "*"); }
+
+  function toggleContent() {
+    views.present.postMessage("toggleContent", "*");
+    views.remote.postMessage("toggleContent", "*");
+  }
+
+  window.onkeydown = function(e) {
+    // Don't intercept keyboard shortcuts
+    if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) {
+      return;
+    }
+    if ( e.keyCode == 37 // left arrow
+      || e.keyCode == 33 // page up
+    ) {
+      e.preventDefault();
+      back();
+    }
+    if ( e.keyCode == 39 // right arrow
+      || e.keyCode == 34 // page down
+    ) {
+      e.preventDefault();
+      forward();
+    }
+    if ( e.keyCode == 32) {
+      e.preventDefault();
+      toggleContent();
+    }
+
+  }
+  function startClock() {
+    setInterval(function() {
+      var now = new Date();
+      var hoursElt = $("#hours");
+      var minutesElt = $("#minutes");
+      var secondsElt = $("#seconds");
+      hours = now.getHours();
+      minutes = now.getMinutes();
+      seconds = now.getSeconds();
+      if (hours < 10) hours = "0" + hours;
+      if (minutes < 10) minutes = "0" + minutes;
+      if (seconds < 10) seconds = "0" + seconds;
+      hoursElt.innerHTML = hours;
+      minutesElt.innerHTML = minutes;
+      secondsElt.innerHTML = seconds;
+    }, 1000);
+  }
+
+  function openSlides() {
+    var windowObjectReference;
+    document.body.classList.add("slidesopen");
+    var strWindowFeatures = "resizable=yes";
+    views.remote = window.open(url + "#" + idx, "slides", strWindowFeatures);
+  }
+</script>
+
+<link href='http://fonts.googleapis.com/css?family=Copse' rel='stylesheet' type='text/css'>
+
+<style>
+  html, body {
+    height: 100%;
+    color: white;
+  }
+
+  body {
+    font-family: sans-serif;
+    overflow: hidden;
+  }
+
+  #present, #future {
+    bottom: 234px;
+    position: absolute;
+    top: 0;
+    z-index: 5;
+  }
+
+  #present {
+    left: 0;
+    right: 50%;
+    border-right: 4px solid #555;
+  }
+
+  #future {
+    left: 50%;
+    right: 0;
+    border-left: 4px solid #555;
+  }
+
+  #notes {
+    background: #EEE;
+    border-top: 8px solid #555;
+    bottom: 0;
+    color: #444;
+    font-size: 30px;
+    height: 226px;
+    left: 0;
+    padding: 0 240px 0 20px;
+    position: absolute;
+    right: 0;
+  }
+
+  #time {
+    background: #888;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    bottom: 0;
+    font-size: 40px;
+    font-weight: bold;
+    height: 52px;
+    line-height: 52px;
+    right: 20px;
+    position: absolute;
+    text-align: center;
+    width: 200px;
+  }
+
+  iframe {
+    border: none;
+    height: 100%;
+    pointer-events: none;
+    width: 100%;
+  }
+
+  .slideidx,
+  .nextslideidx, 
+  .slidecount {
+    background: #888;
+    font-size: 40px;
+    font-weight: bold;
+    height: 52px;
+    line-height: 52px;
+    margin: 0;
+    position: absolute;
+    text-align: center;
+    z-index: 10;
+  }
+
+  .slideidx,
+  .nextslideidx {
+    border-bottom: 4px solid #555;
+    bottom: 230px;
+    width: 80px;
+  }
+
+  .slideidx {
+    border-right: 4px solid #555;
+    border-top-left-radius: 10px;
+    cursor: pointer;
+    padding-left: 4px;
+    right: 50%;
+  }
+
+  .nextslideidx {
+    border-left: 4px solid #555;
+    border-top-right-radius: 10px;
+    left: 50%;
+    padding-right: 4px;
+  }
+
+  .slidecount {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-top: 4px solid #555;
+    bottom: 174px;
+    width: 200px;
+    right: 20px;
+  }
+
+  #popup-button {
+    bottom: 88px;
+    background: #888;
+    border: none;
+    border-radius: 10px;
+    color: #FFF;
+    cursor: pointer;
+    height: 52px;
+    font-size: 30px;
+    font-weight: bold;
+    position: absolute;
+    right: 20px;
+    width: 200px;
+    z-index: 10;
+  }
+
+  .slidesopen #present button {
+    display: none;
+  }
+</style>
+<div id="present">
+  <iframe></iframe>
+</div>
+
+<div id="future">
+  <iframe></iframe>
+</div>
+
+<div class="slideidx" onclick="var gotoidx=prompt('Go to slide...','1');setSlide(gotoidx);">?</div>
+<div class="nextslideidx">?</div>
+
+<div id="notes">
+  <p id="content"></p>
+</div>
+
+<div class="slidecount">?</div>
+<button id="popup-button" onclick="openSlides()">Pop-up</button>
+
+<div id="time">
+  <span id="hours">00</span>:<span id="minutes">00</span>:<span id="seconds">00</span>
+</div>

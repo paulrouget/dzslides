@@ -3,8 +3,12 @@ Yo,
     DZSlides is a HTML template to build slides in HTML5 and CSS3.
     'template.html' is the only file you need.
     Shells are extensions. You don't need them for a basic usage.
-    For a complete presentation, see: http://paulrouget.com/dzslides.
 
-    See 'examples/readme/slides.html' to start.
+    The project contains two shells to handle your slides :
+
+    * 'shells/embedder.html' to embed a presentation in a web page
+    * 'shells/onstage.html' to show your slides with a control panel
+
+    For a complete presentation, see: http://paulrouget.com/dzslides.
 
 -- @paulrouget

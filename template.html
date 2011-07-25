@@ -58,7 +58,6 @@
   section {
       -moz-transition: left 400ms linear 0s;
       -webkit-transition: left 400ms linear 0s;
-      -o-transition: left 400ms linear 0s;
       -ms-transition: left 400ms linear 0s;
       transition: left 400ms linear 0s;
   }
@@ -90,6 +89,9 @@
     position: absolute; top: 50%; left: 50%;
     overflow: hidden;
   }
+  html {
+    overflow: hidden;
+  }
   section {
     position: absolute;
     pointer-events: none;
@@ -112,6 +114,7 @@
     onhashchange();
     setSlide();
     document.body.className = "loaded";
+    setupTouchEvents();
     onresize();
   }
 
@@ -143,6 +146,37 @@
     }
   }
 
+  /* Touch Events */
+
+  function setupTouchEvents() {
+    var orgX, newX;
+    var tracking = false;
+
+    var body = document.body;
+    body.addEventListener("touchstart", start, false);
+    body.addEventListener("touchmove", move, false);
+
+    function start(e) {
+      e.preventDefault();
+      tracking = true;
+      orgX = e.changedTouches[0].pageX;
+    }
+
+    function move(e) {
+      if (!tracking) return;
+      newX = e.changedTouches[0].pageX;
+      if (orgX - newX > 100) {
+        tracking = false;
+        forward();
+      } else {
+        if (orgX - newX < -100) {
+          tracking = false;
+          back();
+        }
+      }
+    }
+  }
+
   /* Adapt the size of the slides to the window */
 
   window.onresize = function() {
@@ -165,8 +199,8 @@
     win = e.source;
     if (msg === "register") {
       friendWindows.push(win);
-      win.postMessage(JSON.stringify({method: "registered", title: document.title, count: slides.length}), document.location);
-      win.postMessage(JSON.stringify({method: "newslide", details: getDetails(idx), idx: idx}), document.location);
+      win.postMessage(JSON.stringify({method: "registered", title: document.title, count: slides.length}), "*");
+      win.postMessage(JSON.stringify({method: "newslide", details: getDetails(idx), idx: idx}), "*");
       return;
     }
     if (msg === "back") back();
@@ -243,7 +277,7 @@
     }
     window.location.hash = idx;
     for (var i = 0; i < friendWindows.length; i++) {
-        friendWindows[i].postMessage(JSON.stringify({method: "newslide", details: getDetails(idx), idx: idx}), document.location);
+        friendWindows[i].postMessage(JSON.stringify({method: "newslide", details: getDetails(idx), idx: idx}), "*");
     }
   }
 </script>
