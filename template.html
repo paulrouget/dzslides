@@ -19,9 +19,9 @@
 <section>
     <h3>No, bar!</h3>
     <ul>
-        <li>Text
-        <li>Images
-        <li>Videos
+        <li class="incremental">Text
+        <li class="incremental">Images
+        <li class="incremental">Videos
     </ul>
 </section>
 
@@ -68,6 +68,9 @@
   section[aria-selected] { left: 0; }
   /* After */
   section[aria-selected] ~ section { left: +150% }
+  
+  .incremental{color:#444;}
+  .current{color:#F06;}
 </style>
 
 
@@ -108,6 +111,21 @@
   var slides;
 
   /* main() */
+  
+  function hasClass(ele,cls) {
+      return ele.className.match(new RegExp('(\\s|^)'+cls+'(\\s|$)'));
+  }
+      
+  function addClass(ele,cls) {
+      if (!this.hasClass(ele,cls)) ele.className += " "+cls;
+  }
+  
+  function removeClass(ele,cls) {
+      if (hasClass(ele,cls)) {
+          var reg = new RegExp('(\\s|^)'+cls+'(\\s|$)');
+          ele.className=ele.className.replace(reg,' ');
+      }
+  }
 
   window.onload = function() {
     slides = document.querySelectorAll("body > section");
@@ -245,15 +263,35 @@
   /* Slide controls */
 
   function back() {
-    if (idx == 1) return;
-    idx--;
-    setSlide();
+    var current = document.querySelector("section:nth-of-type("+ idx +")");
+    var highlighted = current.getElementsByClassName("current");
+    if(highlighted.length > 0){
+        addClass(highlighted[0],"incremental");
+        removeClass(highlighted[0],"current");
+        var backOne = current.getElementsByClassName("incremented");
+        if(backOne.length > 0) {addClass(backOne[backOne.length-1],"current");removeClass(backOne[backOne.length-1],"incremented");}
+    }else{
+        if (idx == 1) return;
+        idx--;
+        setSlide();
+    }
   }
+  
   function forward() {
-    if (idx >= slides.length) return;
-    idx++;
-    setSlide();
+    var current = document.querySelector("section:nth-of-type("+ idx +")");
+    var nextUp = current.getElementsByClassName("incremental");
+    if(nextUp.length > 0){
+        var highlighted = current.getElementsByClassName("current");
+        if(highlighted.length > 0) {addClass(highlighted[0],"incremented");removeClass(highlighted[0],"current");}
+        addClass(nextUp[0],"current");
+        removeClass(nextUp[0],"incremental");
+    }else{
+        if (idx >= slides.length) return;
+        idx++;
+        setSlide();
+    }
   }
+  
   function setSlide() {
     var old = document.querySelector("section[aria-selected]");
     var next = document.querySelector("section:nth-of-type("+ idx +")");
