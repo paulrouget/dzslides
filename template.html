@@ -18,10 +18,10 @@
 
 <section>
     <h3>No, bar!</h3>
-    <ul>
-        <li class="incremental">Text
-        <li class="incremental">Images
-        <li class="incremental">Videos
+    <ul class="incremental">
+        <li>Text
+        <li>Images
+        <li>Videos
     </ul>
 </section>
 
@@ -117,8 +117,25 @@
     onhashchange();
     setSlide();
     document.body.className = "loaded";
+    sortIncrement();
     setupTouchEvents();
     onresize();
+  }
+
+  /* Increment - based on S5 implementation */
+  function sortIncrement() {
+    var incrementals = document.getElementsByClassName("incremental");
+    for(var i=0; i < incrementals.length; i++){
+        if (incrementals[i].nodeName == 'OL' || incrementals[i].nodeName == 'UL') {
+            for (var j = 0; j < incrementals[i].childNodes.length; j++) {
+                if (incrementals[i].childNodes[j].nodeType == 1) {
+                    incrementals[i].childNodes[j].classList.add('incremental');
+                }
+            }
+            incrementals[i].classList.remove('incremental');
+        }
+        
+    }
   }
 
   /* Handle keys */
