@@ -111,21 +111,6 @@
   var slides;
 
   /* main() */
-  
-  function hasClass(ele,cls) {
-      return ele.className.match(new RegExp('(\\s|^)'+cls+'(\\s|$)'));
-  }
-      
-  function addClass(ele,cls) {
-      if (!this.hasClass(ele,cls)) ele.className += " "+cls;
-  }
-  
-  function removeClass(ele,cls) {
-      if (hasClass(ele,cls)) {
-          var reg = new RegExp('(\\s|^)'+cls+'(\\s|$)');
-          ele.className=ele.className.replace(reg,' ');
-      }
-  }
 
   window.onload = function() {
     slides = document.querySelectorAll("body > section");
@@ -266,10 +251,10 @@
     var current = document.querySelector("section:nth-of-type("+ idx +")");
     var highlighted = current.getElementsByClassName("current");
     if(highlighted.length > 0){
-        addClass(highlighted[0],"incremental");
-        removeClass(highlighted[0],"current");
+        highlighted[0].classList.add("incremental");
+        highlighted[0].classList.remove("current");
         var backOne = current.getElementsByClassName("incremented");
-        if(backOne.length > 0) {addClass(backOne[backOne.length-1],"current");removeClass(backOne[backOne.length-1],"incremented");}
+        if(backOne.length > 0) {backOne[backOne.length-1].classList.add("current");backOne[backOne.length-1].classList.remove("incremented");}
     }else{
         if (idx == 1) return;
         idx--;
@@ -282,9 +267,9 @@
     var nextUp = current.getElementsByClassName("incremental");
     if(nextUp.length > 0){
         var highlighted = current.getElementsByClassName("current");
-        if(highlighted.length > 0) {addClass(highlighted[0],"incremented");removeClass(highlighted[0],"current");}
-        addClass(nextUp[0],"current");
-        removeClass(nextUp[0],"incremental");
+        if(highlighted.length > 0) {highlighted[0].classList.add("incremented");highlighted[0].classList.remove("current");}
+        nextUp[0].classList.add("current");
+        nextUp[0].classList.remove("incremental");
     }else{
         if (idx >= slides.length) return;
         idx++;
