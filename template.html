@@ -58,8 +58,8 @@
   section {
       -moz-transition: left 400ms linear 0s;
       -webkit-transition: left 400ms linear 0s;
+      -o-transition: left 400ms linear 0s; /*this line was removed along the way, not sure why exactly but as of Opera 10.1 transitions are supported*/
       -ms-transition: left 400ms linear 0s;
-      -o-transition: left 400ms linear 0s;
       transition: left 400ms linear 0s;
   }
 
@@ -69,6 +69,10 @@
   section[aria-selected] { left: 0; }
   /* After */
   section[aria-selected] ~ section { left: +150%; }
+  
+  /*dummy classes used by Opera to trigger layout/repaint on a section*/
+  /*.o-showsection { }
+    .o-hidesection { }*/
 </style>
 
 
@@ -107,6 +111,15 @@
   var friendWindows = [];
   var idx = 1;
   var slides;
+  /** 
+  * There are (easy) ways to detect if we're dealing with Opera 
+  * (@see http://stackoverflow.com/questions/1998293/how-to-determine-the-opera-browser-using-javascript)
+  * 1) if (opera){ alert(opera.version()); }
+  * 2) if (opera && opera.toString()=="[object Opera]"){ } //or Object.prototype.toString.call(window.opera) == '[object Opera]'
+  * 3) if (window.addEventListener && window.attachEvent){ } //And I noticed, Opera have both addEventListener and attachEvent, so there is also another way
+  * 
+  */
+  var isOpera = Object.prototype.toString.call(window.opera) == '[object Opera]';
 
   /* main() */
 
@@ -188,6 +201,13 @@
     db.style.MozTransform = transform;
     db.style.WebkitTransform = transform;
     db.style.OTransform = transform;
+    /*set the scale back to 1 on all sections so we have a smooth animation, only needed for Opera*/
+    if (isOpera) {
+      var l = slides.length;
+      for (var i = 0; i < l; i++) {
+          slides[i].style.OTransform = "scale(1)";
+      }
+    }
     db.style.msTransform = transform;
     db.style.transform = transform;
   }
@@ -261,15 +281,21 @@
     var next = document.querySelector("section:nth-of-type("+ idx +")");
     if (old) {
       old.removeAttribute("aria-selected");
+      if (isOpera) { /*add/switch dummy class for Opera to trigger layout/repaint on a section*/
+          old.className = 'o-hidesection';
+      }
       var video = old.querySelector("video");
       if (video) { video.pause(); }
     }
     if (next) {
       next.setAttribute("aria-selected", "true");
+      if (isOpera) { /*add/switch dummy class for Opera to trigger layout/repaint on a section*/
+          next.className = "o-showsection";
+      }
       var video = next.querySelector("video");
       if (video) { video.play(); }
     } else {
-      //console.warn("No such slide: " + idx);
+      //console.warn("No such slide: " + idx); /*commented*/
       idx = 0;
       var l = slides.length;
       for (var i = 0; i < l; i++) {
