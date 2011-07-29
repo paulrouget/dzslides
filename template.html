@@ -18,12 +18,18 @@
 
 <section>
     <h3>Incremental ?</h3>
-    <ul class="incremental">
+    <ul class="incremental-list">
       <li>Because
       <li>we
-      <li class="incremental-skip"><span>c</span><span>a</span><span>n</span>
+      <li>can
     </ul>
-    <h3>It works<span class="incremental-one"> !!!</span></h3>
+    <div class="incremental-list">
+      <img src="http://dummyimage.com/100x100/000/fff.png&text=image1" alt="image1" class="incremental-skip" />
+      <img src="http://dummyimage.com/100x100/000/fff.png&text=image2" alt="image2" />
+      <img src="http://dummyimage.com/100x100/000/fff.png&text=image3" alt="image3" class="incremental-skip" />
+      <img src="http://dummyimage.com/100x100/000/fff.png&text=image4" alt="image4" />
+    </div>
+    <h3>It works<span class="incremental"> !!!</span></h3>
 </section>
 
 <section>
@@ -78,7 +84,7 @@
   section[aria-selected] { left: 0; }
   /* After */
   section[aria-selected] ~ section { left: +150% }
-  .incremental :not(.incremented), .incremental-one:not(.incremented){visibility: hidden;}
+  .incremental:not(.incremented), .incremental-list > :not(.incremented){visibility: hidden;}
 </style>
 
 
@@ -268,7 +274,7 @@
     setSlide();
   }
   function increment() {
-    var elts = slides[idx-1].querySelectorAll('.incremental :not(.incremented), .incremental-one:not(.incremented)');
+    var elts = slides[idx-1].querySelectorAll('.incremental:not(.incremented), .incremental-list > :not(.incremented)');
     if (elts.length) {
       elts[0].classList.add('incremented');
       if (elts[0].classList.contains('incremental-skip')) increment();
