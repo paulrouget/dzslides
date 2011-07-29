@@ -69,13 +69,13 @@
     }
   }
 
-  function back() {views.present.postMessage("back", "*");views.remote.postMessage("back", "*"); }
-  function forward() {views.present.postMessage("forward", "*");views.remote.postMessage("forward", "*"); }
+  function back() {views.present.postMessage("back", "*");if (views.remote) views.remote.postMessage("back", "*"); }
+  function forward() {views.present.postMessage("forward", "*");if (views.remote) views.remote.postMessage("forward", "*"); }
   function setSlide(i) {views.present.postMessage("setSlide(" + i + ")", "*");}
 
   function toggleContent() {
     views.present.postMessage("toggleContent", "*");
-    views.remote.postMessage("toggleContent", "*");
+    if (views.remote) views.remote.postMessage("toggleContent", "*");
   }
 
   window.onkeydown = function(e) {
