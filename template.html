@@ -33,7 +33,7 @@
 
 <style>
   html { background-color: black; }
-  body {background-color: white;}
+  body { background-color: white; }
   /* A section is a slide. It's size is 800x600, and this will never change */
   section {
       /* The font from Google */
@@ -47,7 +47,7 @@
   ul {
       margin-left: 200px;
   }
-  a { color: #FF0066; } a:hover {text-decoration: underline;}
+  a { color: #FF0066; } a:hover { text-decoration: underline; }
   footer { position: absolute; bottom: 50px; right: 50px; }
 
   /* Transition effect */
@@ -58,6 +58,7 @@
   section {
       -moz-transition: left 400ms linear 0s;
       -webkit-transition: left 400ms linear 0s;
+      -o-transition: left 400ms linear 0s; /*this line was removed along the way, not sure why exactly but as of Opera 10.1 transitions are supported*/
       -ms-transition: left 400ms linear 0s;
       transition: left 400ms linear 0s;
   }
@@ -67,7 +68,11 @@
   /* Now */
   section[aria-selected] { left: 0; }
   /* After */
-  section[aria-selected] ~ section { left: +150% }
+  section[aria-selected] ~ section { left: +150%; }
+  
+  /*dummy classes used by Opera to trigger layout/repaint on a section*/
+  /*.o-showsection { }
+    .o-hidesection { }*/
 </style>
 
 
@@ -82,7 +87,7 @@
 <!-- Default Style -->
 <style>
   * { margin: 0; padding: 0; }
-  details {display: none;}
+  details { display: none; }
   body {
     width: 800px; height: 600px;
     margin-left: -400px; margin-top: -300px;
@@ -97,15 +102,24 @@
     pointer-events: none;
     width: 100%; height: 100%;
   }
-  section[aria-selected] { pointer-events: auto;}
-  body {display: none}
-  body.loaded {display: block}
+  section[aria-selected] { pointer-events: auto; }
+  body { display: none; }
+  body.loaded { display: block; }
 </style>
 
 <script>
   var friendWindows = [];
   var idx = 1;
   var slides;
+  /** 
+  * There are (easy) ways to detect if we're dealing with Opera 
+  * (@see http://stackoverflow.com/questions/1998293/how-to-determine-the-opera-browser-using-javascript)
+  * 1) if (opera){ alert(opera.version()); }
+  * 2) if (opera && opera.toString()=="[object Opera]"){ } //or Object.prototype.toString.call(window.opera) == '[object Opera]'
+  * 3) if (window.addEventListener && window.attachEvent){ } //And I noticed, Opera have both addEventListener and attachEvent, so there is also another way
+  * 
+  */
+  var isOpera = Object.prototype.toString.call(window.opera) == '[object Opera]';
 
   /* main() */
 
@@ -180,14 +194,22 @@
   /* Adapt the size of the slides to the window */
 
   window.onresize = function() {
-    var sx = document.body.clientWidth / window.innerWidth;
-    var sy = document.body.clientHeight / window.innerHeight;
+    var db = document.body;
+    var sx = db.clientWidth / window.innerWidth;
+    var sy = db.clientHeight / window.innerHeight;
     var transform = "scale(" + (1/Math.max(sx, sy)) + ")";
-    document.body.style.MozTransform = transform;
-    document.body.style.WebkitTransform = transform;
-    document.body.style.OTransform = transform;
-    document.body.style.msTransform = transform;
-    document.body.style.transform = transform;
+    db.style.MozTransform = transform;
+    db.style.WebkitTransform = transform;
+    db.style.OTransform = transform;
+    /*set the scale back to 1 on all sections so we have a smooth animation, only needed for Opera*/
+    if (isOpera) {
+      var l = slides.length;
+      for (var i = 0; i < l; i++) {
+          slides[i].style.OTransform = "scale(1)";
+      }
+    }
+    db.style.msTransform = transform;
+    db.style.transform = transform;
   }
   function getDetails(idx) {
     var s = document.querySelector("section:nth-of-type("+ idx +")");
@@ -195,8 +217,8 @@
     return d?d.innerHTML:"";
   }
   window.onmessage = function(e) {
-    msg = e.data;
-    win = e.source;
+    var msg = e.data;
+    var win = e.source;
     if (msg === "register") {
       friendWindows.push(win);
       win.postMessage(JSON.stringify({method: "registered", title: document.title, count: slides.length}), "*");
@@ -259,24 +281,32 @@
     var next = document.querySelector("section:nth-of-type("+ idx +")");
     if (old) {
       old.removeAttribute("aria-selected");
+      if (isOpera) { /*add/switch dummy class for Opera to trigger layout/repaint on a section*/
+          old.className = 'o-hidesection';
+      }
       var video = old.querySelector("video");
       if (video) { video.pause(); }
     }
     if (next) {
       next.setAttribute("aria-selected", "true");
+      if (isOpera) { /*add/switch dummy class for Opera to trigger layout/repaint on a section*/
+          next.className = "o-showsection";
+      }
       var video = next.querySelector("video");
       if (video) { video.play(); }
     } else {
-      console.warn("No such slide: " + idx);
+      //console.warn("No such slide: " + idx); /*commented*/
       idx = 0;
-      for (var i = 0; i < slides.length; i++) {
+      var l = slides.length;
+      for (var i = 0; i < l; i++) {
           if (slides[i].hasAttribute("aria-selected")) {
               idx = i + 1;
           }
       }
     }
     window.location.hash = idx;
-    for (var i = 0; i < friendWindows.length; i++) {
+    var l = friendWindows.length;
+    for (var i = 0; i < l; i++) {
         friendWindows[i].postMessage(JSON.stringify({method: "newslide", details: getDetails(idx), idx: idx}), "*");
     }
   }
