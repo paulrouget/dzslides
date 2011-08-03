@@ -123,18 +123,14 @@
   }
 
   /* Increment - based on S5 implementation */
+  /* Allows for an ".incremental" placement on a ul/ol (rather than on each <li>) or ".incremental-list" on a any other element */
   function sortIncrement() {
-    var incrementals = document.getElementsByClassName("incremental");
+    var incrementals = document.querySelectorAll("ul.incremental, ol.incremental, .incremental-list");
     for(var i=0; i < incrementals.length; i++){
-        if (incrementals[i].nodeName == 'OL' || incrementals[i].nodeName == 'UL') {
-            for (var j = 0; j < incrementals[i].childNodes.length; j++) {
-                if (incrementals[i].childNodes[j].nodeType == 1) {
-                    incrementals[i].childNodes[j].classList.add('incremental');
-                }
-            }
-            incrementals[i].classList.remove('incremental');
+        for (var j = 0; j < incrementals[i].childNodes.length; j++) {
+            if (incrementals[i].childNodes[j].nodeType == Node.ELEMENT_NODE) incrementals[i].childNodes[j].classList.add('incremental');
         }
-        
+        incrementals[i].classList.remove('incremental');
     }
   }
 
