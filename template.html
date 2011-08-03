@@ -85,6 +85,7 @@
   /* After */
   section[aria-selected] ~ section { left: +150% }
   .incremental:not(.incremented), .incremental-list > :not(.incremented){visibility: hidden;}
+  .incremental-current{color:#bada55}
 </style>
 
 
@@ -275,16 +276,24 @@
   }
   function increment() {
     var elts = slides[idx-1].querySelectorAll('.incremental:not(.incremented), .incremental-list > :not(.incremented)');
+    var current = slides[idx-1].querySelector('.incremental-current');
     if (elts.length) {
+      if (current)
+        current.classList.remove('incremental-current');
       elts[0].classList.add('incremented');
+      elts[0].classList.add('incremental-current');
       if (elts[0].classList.contains('incremental-skip')) increment();
     }
     return elts.length;
   }
   function decrement() {
     var elts = slides[idx-1].querySelectorAll('.incremented');
+    var current = slides[idx-1].querySelector('.incremental-current');
     if (elts.length) {
+      current.classList.remove('incremental-current');
       elts[elts.length-1].classList.remove('incremented');
+      if (elts.length > 1)
+        elts[elts.length-2].classList.add('incremental-current');
       if (elts.length >= 2 && elts[elts.length-2].classList.contains('incremental-skip')) decrement();
     }
     return elts.length;
