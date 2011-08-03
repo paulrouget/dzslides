@@ -265,7 +265,7 @@
   /* Slide controls */
 
   function back() {
-    var current = document.querySelector("section:nth-of-type("+ idx +")");
+    var current = document.querySelector("section[aria-selected]");
     var highlighted = current.getElementsByClassName("current");
     if(highlighted.length > 0){
         highlighted[0].classList.add("incremental");
@@ -280,7 +280,7 @@
   }
   
   function forward() {
-    var current = document.querySelector("section:nth-of-type("+ idx +")");
+    var current = document.querySelector("section[aria-selected]");
     var nextUp = current.getElementsByClassName("incremental");
     if(nextUp.length > 0){
         var highlighted = current.getElementsByClassName("current");
