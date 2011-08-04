@@ -70,7 +70,7 @@
   section[aria-selected] ~ section { left: +150% }
   
   .incremental{color:#666;}
-  .current{color:#F06;}
+  .incremental-current{color:#F06;}
 </style>
 
 
@@ -258,12 +258,12 @@
 
   function back() {
     var current = document.querySelector("section[aria-selected]");
-    var highlighted = current.getElementsByClassName("current");
+    var highlighted = current.getElementsByClassName("incremental-current");
     if(highlighted.length > 0){
         highlighted[0].classList.add("incremental");
-        highlighted[0].classList.remove("current");
+        highlighted[0].classList.remove("incremental-current");
         var backOne = current.getElementsByClassName("incremented");
-        if(backOne.length > 0) {backOne[backOne.length-1].classList.add("current");backOne[backOne.length-1].classList.remove("incremented");}
+        if(backOne.length > 0) {backOne[backOne.length-1].classList.add("incremental-current");backOne[backOne.length-1].classList.remove("incremented");}
     }else{
         if (idx == 1) return;
         idx--;
@@ -275,9 +275,9 @@
     var current = document.querySelector("section[aria-selected]");
     var nextUp = current.getElementsByClassName("incremental");
     if(nextUp.length > 0){
-        var highlighted = current.getElementsByClassName("current");
-        if(highlighted.length > 0) {highlighted[0].classList.add("incremented");highlighted[0].classList.remove("current");}
-        nextUp[0].classList.add("current");
+        var highlighted = current.getElementsByClassName("incremental-current");
+        if(highlighted.length > 0) {highlighted[0].classList.add("incremented");highlighted[0].classList.remove("incremental-current");}
+        nextUp[0].classList.add("incremental-current");
         nextUp[0].classList.remove("incremental");
     }else{
         if (idx >= slides.length) return;
