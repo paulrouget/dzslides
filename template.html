@@ -18,7 +18,7 @@
 
 <section>
     <h3>No, bar!</h3>
-    <ul class="incremental">
+    <ul class="incremental-list">
         <li>Text
         <li>Images
         <li>Videos
@@ -69,7 +69,7 @@
   /* After */
   section[aria-selected] ~ section { left: +150% }
   
-  .incremental{color:#444;}
+  .incremental{color:#666;}
   .current{color:#F06;}
 </style>
 
@@ -123,14 +123,10 @@
   }
 
   /* Increment - based on S5 implementation */
-  /* Allows for an ".incremental" placement on a ul/ol (rather than on each <li>) or ".incremental-list" on a any other element */
   function sortIncrement() {
-    var incrementals = document.querySelectorAll("ul.incremental, ol.incremental, .incremental-list");
+    var incrementals = document.querySelectorAll(".incremental-list > *");
     for(var i=0; i < incrementals.length; i++){
-        for (var j = 0; j < incrementals[i].childNodes.length; j++) {
-            if (incrementals[i].childNodes[j].nodeType == Node.ELEMENT_NODE) incrementals[i].childNodes[j].classList.add('incremental');
-        }
-        incrementals[i].classList.remove('incremental');
+        incrementals[i].classList.add('incremental');
     }
   }
 
