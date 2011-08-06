@@ -17,6 +17,22 @@
 </section>
 
 <section>
+    <h3>Incremental ?</h3>
+    <ul class="incremental-list">
+      <li>Because
+      <li>we
+      <li>can
+    </ul>
+    <div class="incremental-list">
+      <img src="http://dummyimage.com/100x100/000/fff.png&text=image1" alt="image1" class="incremental-skip" />
+      <img src="http://dummyimage.com/100x100/000/fff.png&text=image2" alt="image2" />
+      <img src="http://dummyimage.com/100x100/000/fff.png&text=image3" alt="image3" class="incremental-skip" />
+      <img src="http://dummyimage.com/100x100/000/fff.png&text=image4" alt="image4" />
+    </div>
+    <h3>It works<span class="incremental"> !!!</span></h3>
+</section>
+
+<section>
     <h3>No, bar!</h3>
     <ul>
         <li>Text
@@ -68,6 +84,8 @@
   section[aria-selected] { left: 0; }
   /* After */
   section[aria-selected] ~ section { left: +150% }
+  .incremental:not(.incremented), .incremental-list > :not(.incremented){visibility: hidden;}
+  .incremental-current{color:#bada55}
 </style>
 
 
@@ -245,14 +263,40 @@
   /* Slide controls */
 
   function back() {
+    if (decrement()) return;
     if (idx == 1) return;
     idx--;
     setSlide();
   }
   function forward() {
+    if (increment()) return;
     if (idx >= slides.length) return;
     idx++;
     setSlide();
+  }
+  function increment() {
+    var elts = slides[idx-1].querySelectorAll('.incremental:not(.incremented), .incremental-list > :not(.incremented)');
+    var current = slides[idx-1].querySelector('.incremental-current');
+    if (elts.length) {
+      if (current)
+        current.classList.remove('incremental-current');
+      elts[0].classList.add('incremented');
+      elts[0].classList.add('incremental-current');
+      if (elts[0].classList.contains('incremental-skip')) increment();
+    }
+    return elts.length;
+  }
+  function decrement() {
+    var elts = slides[idx-1].querySelectorAll('.incremented');
+    var current = slides[idx-1].querySelector('.incremental-current');
+    if (elts.length) {
+      current.classList.remove('incremental-current');
+      elts[elts.length-1].classList.remove('incremented');
+      if (elts.length > 1)
+        elts[elts.length-2].classList.add('incremental-current');
+      if (elts.length >= 2 && elts[elts.length-2].classList.contains('incremental-skip')) decrement();
+    }
+    return elts.length;
   }
   function setSlide() {
     var old = document.querySelector("section[aria-selected]");
@@ -277,7 +321,7 @@
     }
     window.location.hash = idx;
     for (var i = 0; i < friendWindows.length; i++) {
-        friendWindows[i].postMessage(JSON.stringify({method: "newslide", details: getDetails(idx), idx: idx}), "*");
+        friendWindows[i].postMessage(JSON.stringify({method: "newslide", details: getDetails(idx), idx: idx }), "*");
     }
   }
 </script>
