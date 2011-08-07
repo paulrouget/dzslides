@@ -33,7 +33,7 @@
 
 <style>
   html { background-color: black; }
-  body {background-color: white;}
+  body { background-color: white; }
   /* A section is a slide. It's size is 800x600, and this will never change */
   section {
       /* The font from Google */
@@ -47,7 +47,7 @@
   ul {
       margin-left: 200px;
   }
-  a { color: #FF0066; } a:hover {text-decoration: underline;}
+  a { color: #FF0066; } a:hover { text-decoration: underline; }
   footer { position: absolute; bottom: 50px; right: 50px; }
 
   /* Transition effect */
@@ -67,7 +67,7 @@
   /* Now */
   section[aria-selected] { left: 0; }
   /* After */
-  section[aria-selected] ~ section { left: +150% }
+  section[aria-selected] ~ section { left: +150%; }
 </style>
 
 
@@ -82,7 +82,7 @@
 <!-- Default Style -->
 <style>
   * { margin: 0; padding: 0; }
-  details {display: none;}
+  details { display: none; }
   body {
     width: 800px; height: 600px;
     margin-left: -400px; margin-top: -300px;
@@ -97,9 +97,9 @@
     pointer-events: none;
     width: 100%; height: 100%;
   }
-  section[aria-selected] { pointer-events: auto;}
-  body {display: none}
-  body.loaded {display: block}
+  section[aria-selected] { pointer-events: auto; }
+  body { display: none; }
+  body.loaded { display: block; }
 </style>
 
 <script>
@@ -152,9 +152,9 @@
     var orgX, newX;
     var tracking = false;
 
-    var body = document.body;
-    body.addEventListener("touchstart", start, false);
-    body.addEventListener("touchmove", move, false);
+    var db = document.body;
+    db.addEventListener("touchstart", start, false);
+    db.addEventListener("touchmove", move, false);
 
     function start(e) {
       e.preventDefault();
@@ -180,14 +180,15 @@
   /* Adapt the size of the slides to the window */
 
   window.onresize = function() {
-    var sx = document.body.clientWidth / window.innerWidth;
-    var sy = document.body.clientHeight / window.innerHeight;
+    var db = document.body;
+    var sx = db.clientWidth / window.innerWidth;
+    var sy = db.clientHeight / window.innerHeight;
     var transform = "scale(" + (1/Math.max(sx, sy)) + ")";
-    document.body.style.MozTransform = transform;
-    document.body.style.WebkitTransform = transform;
-    document.body.style.OTransform = transform;
-    document.body.style.msTransform = transform;
-    document.body.style.transform = transform;
+    db.style.MozTransform = transform;
+    db.style.WebkitTransform = transform;
+    db.style.OTransform = transform;
+    db.style.msTransform = transform;
+    db.style.transform = transform;
   }
   function getDetails(idx) {
     var s = document.querySelector("section:nth-of-type("+ idx +")");
@@ -195,8 +196,8 @@
     return d?d.innerHTML:"";
   }
   window.onmessage = function(e) {
-    msg = e.data;
-    win = e.source;
+    var msg = e.data;
+    var win = e.source;
     if (msg === "register") {
       friendWindows.push(win);
       win.postMessage(JSON.stringify({method: "registered", title: document.title, count: slides.length}), "*");
@@ -267,16 +268,15 @@
       var video = next.querySelector("video");
       if (video) { video.play(); }
     } else {
-      console.warn("No such slide: " + idx);
       idx = 0;
-      for (var i = 0; i < slides.length; i++) {
+      for (var i = 0, l = slides.length; i < l; i++) {
           if (slides[i].hasAttribute("aria-selected")) {
               idx = i + 1;
           }
       }
     }
     window.location.hash = idx;
-    for (var i = 0; i < friendWindows.length; i++) {
+    for (var i = 0, l = friendWindows.length; i < l; i++) {
         friendWindows[i].postMessage(JSON.stringify({method: "newslide", details: getDetails(idx), idx: idx}), "*");
     }
   }
