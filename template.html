@@ -297,16 +297,14 @@
     } else {
       //console.warn("No such slide: " + idx); /*commented*/
       idx = 0;
-      var l = slides.length;
-      for (var i = 0; i < l; i++) {
+      for (var i = 0, l = slides.length; i < l; i++) {
           if (slides[i].hasAttribute("aria-selected")) {
               idx = i + 1;
           }
       }
     }
     window.location.hash = idx;
-    var l = friendWindows.length;
-    for (var i = 0; i < l; i++) {
+    for (var i = 0, l = friendWindows.length; i < l; i++) {
         friendWindows[i].postMessage(JSON.stringify({method: "newslide", details: getDetails(idx), idx: idx}), "*");
     }
   }
