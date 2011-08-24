@@ -17,6 +17,21 @@
 </section>
 
 <section>
+    <h3>Incremental ?</h3>
+    <ul class="incremental">
+      <li>Yes
+      <li>of
+      <li>course
+    </ul>
+    <div class="images incremental">
+      <img src="http://dummyimage.com/100x100/000/fff.png&text=image1" alt="image1" />
+      <img src="http://dummyimage.com/100x100/000/fff.png&text=image2" alt="image2" />
+      <img src="http://dummyimage.com/100x100/000/fff.png&text=image3" alt="image3" />
+      <img src="http://dummyimage.com/100x100/000/fff.png&text=image4" alt="image4" />
+    </div>
+</section>
+
+<section>
     <h3>No, bar!</h3>
     <ul>
         <li>Text
@@ -49,6 +64,11 @@
   }
   a { color: #FF0066; } a:hover {text-decoration: underline;}
   footer { position: absolute; bottom: 50px; right: 50px; }
+  
+  .images {
+    margin: 20px;
+    text-align: center;
+  }
 
   /* Transition effect */
   /* Feel free to change the transition effect for original
@@ -68,6 +88,13 @@
   section[aria-selected] { left: 0; }
   /* After */
   section[aria-selected] ~ section { left: +150% }
+  
+  /* Increment with lists */
+  .incremental > * { opacity: 1; }
+  .incremental > *[aria-selected] { color: red; opacity: 1; }
+  .incremental > *[aria-selected] ~ * { opacity: 0.2; }
+  /* Increment with images */
+  .incremental > img[aria-selected] { box-shadow: 0 0 10px #000 }
 </style>
 
 
@@ -100,11 +127,13 @@
   section[aria-selected] { pointer-events: auto;}
   body {display: none}
   body.loaded {display: block}
+  .incremental {visibility: hidden}
+  .incremental[active] {visibility: visible}
 </style>
 
 <script>
   var friendWindows = [];
-  var idx = 1;
+  var idx, step;
   var slides;
 
   /* main() */
@@ -112,7 +141,6 @@
   window.onload = function() {
     slides = document.querySelectorAll("body > section");
     onhashchange();
-    setSlide();
     document.body.className = "loaded";
     setupTouchEvents();
     onresize();
@@ -234,27 +262,38 @@
   /* If the user change the slide number in the URL bar, jump
      to this slide. */
 
+  function setCursor(_idx, _step) {
+    _step = (_step != 0 && typeof _step !== "undefined") ? "." + _step : "";
+    window.location.hash = "#" + _idx + _step;
+  }
   window.onhashchange = function(e) {
-    var newidx = ~~window.location.hash.split("#")[1];
-    if (!newidx) newidx = 1;
-    if (newidx == idx) return;
-    idx = newidx;
-    setSlide();
+    var cursor = window.location.hash.split("#"), newidx = 1, newstep = 0;
+    if (cursor.length == 2) {
+      newidx = ~~cursor[1].split(".")[0];
+      newstep = ~~cursor[1].split(".")[1];
+    }
+    if (newidx != idx) setSlide(newidx);
+    setIncremental(newstep);
   }
 
   /* Slide controls */
 
   function back() {
-    if (idx == 1) return;
-    idx--;
-    setSlide();
+    if (idx == 1 && step == 0) return;
+    if (step == 0)
+      setCursor(idx - 1, slides[idx - 2].querySelectorAll('.incremental > *').length);
+    else 
+      setCursor(idx, step - 1);
   }
   function forward() {
-    if (idx >= slides.length) return;
-    idx++;
-    setSlide();
+    if (idx >= slides.length && step >= slides[idx - 1].querySelectorAll('.incremental > *').length) return;
+    if (step >= slides[idx - 1].querySelectorAll('.incremental > *').length)
+      setCursor(idx + 1, 0);
+    else
+      setCursor(idx, step + 1);
   }
-  function setSlide() {
+  function setSlide(_idx) {
+    idx = _idx;
     var old = document.querySelector("section[aria-selected]");
     var next = document.querySelector("section:nth-of-type("+ idx +")");
     if (old) {
@@ -275,10 +314,41 @@
           }
       }
     }
-    window.location.hash = idx;
     for (var i = 0; i < friendWindows.length; i++) {
         friendWindows[i].postMessage(JSON.stringify({method: "newslide", details: getDetails(idx), idx: idx}), "*");
     }
+  }
+  function setIncremental(_step) {
+    step = _step;
+    var old = slides[idx-1].querySelector('.incremental > *[aria-selected]');
+      if (old)
+        old.removeAttribute('aria-selected');
+    var incrementals = slides[idx-1].querySelectorAll('.incremental');
+    if (step == 0) {
+      for (var i = 0; i < incrementals.length; i++) {
+        incrementals[i].removeAttribute('active');
+      }
+      return;
+    }
+    var next = slides[idx-1].querySelectorAll('.incremental > *')[step-1];
+    if (next) {
+      next.setAttribute('aria-selected', true);
+      next.parentElement.setAttribute('active', true);
+      var found = false;
+      for (var i = 0; i < incrementals.length; i++) {
+        if (incrementals[i] != next.parentElement)
+          if (found)
+            incrementals[i].removeAttribute('active');
+          else
+            incrementals[i].setAttribute('active', true);
+        else
+          found = true;
+      }
+    } else {
+      setCursor(idx, 0);
+      console.warn("No such incremental: " + _step);
+    }
+    return next;
   }
 </script>
 <!-- vim: set fdm=marker: }}} -->
