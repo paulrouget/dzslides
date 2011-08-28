@@ -11,7 +11,7 @@
   <iframe></iframe>
 </div>
 
-<div id="slideidx" onclick="Dz.setSlide(prompt('Go to slide...','1'));">?</div>
+<div id="slideidx" onclick="Dz.setCursor(prompt('Go to slide...','1'));">?</div>
 <div id="nextslideidx">?</div>
 
 <div id="notes">
@@ -195,19 +195,23 @@
   
   Dz.onmessage = function(aEvent) {
     if (aEvent.source === this.views.present) {
-      var args = JSON.parse(aEvent.data);
-      if (args.method === "newslide") {
-        this.idx = ~~args.idx;
-        $("#notes > #content").innerHTML = this.notes = args.details
+      var msg = aEvent.data.split(" ");
+      if (msg[0] === "CURSOR") {
+        var cursor = msg[1].split(".");
+        if (this.idx != ~~cursor[0])
+          this.views.present.postMessage("GET_NOTES", "*");
+        this.idx = ~~cursor[0];
+        this.step = ~~cursor[1];
         $("#slideidx").innerHTML = this.idx;
         $("#nextslideidx").innerHTML = this.idx + 1;
-        this.views.future.postMessage("setSlide(" + (this.idx + 1) + ")", "*");
+        this.views.future.postMessage("SET_CURSOR " + this.idx + "." + (this.step + 1), "*");
         if (this.views.remote)
-          this.views.remote.postMessage("setSlide(" + this.idx + ")", "*");
+          this.views.remote.postMessage("SET_CURSOR " + msg[1], "*");
       }
-      if (args.method === "registered") {
-        $("#slidecount").innerHTML = args.count;
-      }
+      if (msg[0] === "NOTES")
+        $("#notes > #content").innerHTML = this.notes = msg.splice(1).join(" ");
+      if (msg[0] === "REGISTERED")
+        $("#slidecount").innerHTML = msg.pop();
     }
   }
   
@@ -237,14 +241,14 @@
       var id = this.parentNode.id;
       Dz.views[id] = this.contentWindow;
       if (id == 'present' && Dz.views.present)
-        Dz.views.present.postMessage("register", "*");
+        Dz.views.present.postMessage("REGISTER", "*");
     }
   }
   
   Dz.toggleContent = function() {
-    this.views.present.postMessage("toggleContent", "*");
+    this.views.present.postMessage("TOGGLE_CONTENT", "*");
     if (this.views.remote)
-      this.views.remote.postMessage("toggleContent", "*");
+      this.views.remote.postMessage("TOGGLE_CONTENT", "*");
   }
   
   Dz.onhashchange = function() {
@@ -252,15 +256,15 @@
   }
   
   Dz.back = function() {
-    this.views.present.postMessage("back", "*");
+    this.views.present.postMessage("BACK", "*");
   }
 
   Dz.forward = function() {
-    this.views.present.postMessage("forward", "*");
+    this.views.present.postMessage("FORWARD", "*");
   }
-
-  Dz.setSlide = function(aIdx) {
-    this.views.present.postMessage("setSlide(" + aIdx + ")", "*");
+  
+  Dz.setCursor = function(aCursor) {
+    this.views.present.postMessage("SET_CURSOR " + aCursor, "*");
   }
 
   Dz.popup = function() {

@@ -13,7 +13,7 @@
     <svg width="15px" height="15px" viewBox="0 0 50 50"><path d="M46.686,2.632L23.694,25.624l22.992,22.993H27.183L4.189,25.624 L27.183,2.632H46.686z"/></svg>
   </button>
   <p id="rightcontrols">
-    <input onchange="Dz.setSlide(this.value)" size="2" id="slideidx" value="0" />/<span id="slidecount">...</span>
+    <input onchange="Dz.setCursor(this.value)" size="2" id="slideidx" value="0" />/<span id="slidecount">...</span>
     <button title="Open in a new window" id="popup" onclick="Dz.popup()">
       <svg width="15px" height="15px" viewBox="0 0 50 50"><path d="M10,0L10,40L50,40L50,0z M0,5L5,5L5,45L45,45L45,50L0,50Z"/></svg>
     </button>
@@ -127,18 +127,18 @@
   
   Dz.onmessage = function(aEvent) {
     if (aEvent.source === this.view) {
-      var args = JSON.parse(aEvent.data);
-      if (args.method === "newslide") {
-        this.idx = ~~args.idx;
+      var msg = aEvent.data.split(" ");
+      if (msg[0] === "CURSOR") {
+        var cursor = msg[1].split(".");
+        this.idx = ~~cursor[0];
+        this.step = ~~cursor[1];
         $("#slideidx").value = this.idx;
         $("#back").disabled = this.idx == 1;
         $("#forward").disabled = this.idx == this.count;
       }
-      if (args.method === "registered") {
-        this.count = args.count;
-        $("#slidecount").innerHTML = this.count;
-        $("#title").innerHTML = args.title;
-        document.title = args.title;
+      if (msg[0] === "REGISTERED") {
+        $("#slidecount").innerHTML = msg.pop();
+        document.title = $("#title").innerHTML = msg.slice(1).join(' ');
       }
     }
   }
@@ -166,12 +166,12 @@
     iframe.src = this.url = this.getUrl();
     iframe.onload = function() {
       Dz.view = this.contentWindow;
-      Dz.view.postMessage("register", "*");
+      Dz.view.postMessage("REGISTER", "*");
     }
   }
   
   Dz.toggleContent = function() {
-    this.view.postMessage("toggleContent", "*");
+    this.view.postMessage("TOGGLE_CONTENT", "*");
   }
   
   Dz.onhashchange = function() {
@@ -179,15 +179,15 @@
   }
   
   Dz.back = function() {
-    this.view.postMessage("back", "*");
+    this.view.postMessage("BACK", "*");
   }
 
   Dz.forward = function() {
-    this.view.postMessage("forward", "*");
+    this.view.postMessage("FORWARD", "*");
   }
 
-  Dz.setSlide = function(aIdx) {
-    this.view.postMessage("setSlide(" + aIdx + ")", "*");
+  Dz.setCursor = function(aCursor) {
+    this.view.postMessage("SET_CURSOR " + aCursor, "*");
   }
 
   Dz.popup = function() {

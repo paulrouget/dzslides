@@ -278,30 +278,26 @@
   }
 
   Dz.onmessage = function(aEvent) {
-    var msg = aEvent.data;
+    var msg = aEvent.data.split(" ");
     var win = aEvent.source;
-    if (msg === "register") {
+    if (msg[0] === "REGISTER") {
       this.remoteWindows.push(win);
-      win.postMessage(JSON.stringify({
-        method: "registered",
-        title: document.title,
-        count: this.slides.length
-      }), "*");
-      win.postMessage(JSON.stringify({
-        method: "newslide",
-        details: this.getDetails(this.idx),
-        idx: this.idx
-      }), "*");
+      win.postMessage("REGISTERED " + document.title + " " + this.slides.length, "*");
+      win.postMessage("CURSOR " + this.idx + "." + this.step, "*");
       return;
     }
-    if (msg === "back") this.back();
-    if (msg === "forward") this.forward();
-    if (msg === "toggleContent") this.toggleContent();
-    // setSlide(42)
-    var r = /setSlide\((\d+)\)/.exec(msg);
-    if (r) {
-        this.setCursor(r[1], 0);
-    }
+    if (msg[0] === "BACK")
+      this.back();
+    if (msg[0] === "FORWARD")
+      this.forward();
+    if (msg[0] === "TOGGLE_CONTENT")
+      this.toggleContent();
+    if (msg[0] === "SET_CURSOR")
+      window.location.hash = "#" + msg[1];
+    if (msg[0] === "GET_CURSOR")
+      win.postMessage("CURSOR " + this.idx + "." + this.step, "*");
+    if (msg[0] === "GET_NOTES")
+      win.postMessage("NOTES " + this.getDetails(this.idx), "*");
   }
 
   Dz.toggleContent = function() {
@@ -323,7 +319,7 @@
   Dz.setCursor = function(aIdx, aStep) {
     // If the user change the slide number in the URL bar, jump
     // to this slide.
-    aStep = (aStep != 0 && typeof aStep !== "undefined") ? "." + aStep : "";
+    aStep = (aStep != 0 && typeof aStep !== "undefined") ? "." + aStep : ".0";
     window.location.hash = "#" + aIdx + aStep;
   }
 
@@ -334,12 +330,19 @@
     if (cursor.length == 2) {
       newidx = ~~cursor[1].split(".")[0];
       newstep = ~~cursor[1].split(".")[1];
+      if (newstep > Dz.slides[newidx-1].$$('.incremental > *').length) {
+        newstep = 0;
+        newidx++;
+      }
     }
     if (newidx != this.idx) {
       this.setSlide(newidx);
     }
     if (newstep != this.step) {
       this.setIncremental(newstep);
+    }
+    for (var i = 0; i < this.remoteWindows.length; i++) {
+      this.remoteWindows[i].postMessage("CURSOR " + this.idx + "." + this.step, "*");
     }
   }
 
@@ -398,13 +401,6 @@
       // That should not happen
       this.idx = -1;
       // console.warn("Slide doesn't exist.");
-    }
-    for (var i = 0; i < this.remoteWindows.length; i++) {
-      this.remoteWindows[i].postMessage(JSON.stringify({
-        method: "newslide",
-        details: this.getDetails(this.idx),
-        idx: this.idx
-      }), "*");
     }
   }
 
