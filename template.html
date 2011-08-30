@@ -333,10 +333,10 @@
     var next = slides[idx-1].querySelectorAll('.incremental > *')[step-1];
     if (next) {
       next.setAttribute('aria-selected', true);
-      next.parentElement.setAttribute('active', true);
+      next.parentNode.setAttribute('active', true);
       var found = false;
       for (var i = 0; i < incrementals.length; i++) {
-        if (incrementals[i] != next.parentElement)
+        if (incrementals[i] != next.parentNode)
           if (found)
             incrementals[i].removeAttribute('active');
           else
