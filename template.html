@@ -139,6 +139,14 @@
       e.preventDefault();
       forward();
     }
+    if (e.keyCode == 35) { // end
+      e.preventDefault();
+      end();
+    }
+    if (e.keyCode == 36) { // home
+      e.preventDefault();
+      start();
+    }
 
     if ( e.keyCode == 32) { // space
         e.preventDefault();
@@ -254,6 +262,15 @@
     idx++;
     setSlide();
   }
+  function start() {
+    idx = 1;
+    setSlide();
+  }
+  function end() {
+    idx = slides.length;
+    setSlide();
+  }
+
   function setSlide() {
     var old = document.querySelector("section[aria-selected]");
     var next = document.querySelector("section:nth-of-type("+ idx +")");
