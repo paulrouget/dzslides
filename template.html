@@ -356,7 +356,7 @@
       // console.warn("Slide doesn't exist.");
     }
     for (var i = 0; i < this.remoteWindows.length; i++) {
-      remoteWindows[i].postMessage(JSON.stringify({
+      this.remoteWindows[i].postMessage(JSON.stringify({
         method: "newslide",
         details: this.getDetails(this.idx),
         idx: this.idx
