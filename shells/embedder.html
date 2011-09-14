@@ -1,95 +1,24 @@
 <!DOCTYPE html>
+
 <meta charset="utf8">
 <title>...</title>
 
-<script>
-  var view, url, idx = 1, count;
-  function $(query) { return document.querySelector(query)}
-
-  function getURL() {
-    var u = window.location.hash.split("#")[1];
-    if (!u) {
-      u = window.prompt("What is the URL of the slides?");
-      if (u) {
-        window.location.hash = u.split("#")[0];
-        return u;
-      }
-      u= "<style>body{background-color:white;color:black}</style>";
-      u+= "<strong>ERROR:</strong> No URL specified.<br>"
-      u+= "Try<em>: " + document.location + "#yourslides.html</em>"
-      u= "data:text/html," + encodeURIComponent(u);
-    }
-    return u;
-  }
-
-  window.onload = function() {
-    var iframe = $("iframe");
-    url = getURL();
-    iframe.src = url;
-    iframe.onload = function() {
-      view = iframe.contentWindow;
-      view.postMessage("register", "*");
-    }
-  }
-  window.onhashchange = window.onload;
-  window.onmessage = function(e) {
-    if (e.source === view) {
-      var args = JSON.parse(e.data);
-      if (args.method === "newslide") {
-        idx = ~~args.idx;
-        $("#slideidx").value = idx;
-        if (idx == 1) {
-          $("#back").disabled = true;
-          } else {
-          $("#back").disabled = false;
-        }
-        if (idx == count) {
-          $("#forward").disabled = true;
-          } else {
-          $("#forward").disabled = false;
-        }
-      }
-      if (args.method === "registered") {
-        count = args.count;
-        $("#slidecount").innerHTML = count;
-        $("#title").innerHTML = args.title;
-        document.title = args.title;
-      }
-    }
-  }
-  function back() { view.postMessage("back", "*"); }
-  function forward() { view.postMessage("forward", "*"); }
-  function setSlide(i) {view.postMessage("setSlide(" + i + ")", "*"); }
-
-  function popup() {
-    window.open(url + "#" + idx,'','width=800,height=600,personalbar=0,toolbar=0,scrollbars=1,resizable=1');
-  }
-  window.onkeydown = function(e) {
-    // Don't intercept keyboard shortcuts
-    if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) {
-      return;
-    }
-    if ( e.keyCode == 37 // left arrow
-      || e.keyCode == 33 // page up
-    ) {
-      console.log("back");
-      e.preventDefault();
-      back();
-    }
-    if ( e.keyCode == 39 // right arrow
-      || e.keyCode == 34 // page down
-    ) {
-      e.preventDefault();
-      forward();
-    }
-    if ( e.keyCode == 32) {
-      e.preventDefault();
-      toggleContent();
-    }
-
-  }
-
-</script>
+<h1 id="title">...</h1>
+<iframe></iframe>
+<div id="controls">
+  <button title="prev" id="back" onclick="Dz.back()">
+    <svg width="15px" height="15px" viewBox="0 0 50 50"><path d="M46.686,2.632L23.694,25.624l22.992,22.993H27.183L4.189,25.624 L27.183,2.632H46.686z"/></svg>
+  </button>
+  <button title="next" id="forward" onclick="Dz.forward()">
+    <svg width="15px" height="15px" viewBox="0 0 50 50"><path d="M46.686,2.632L23.694,25.624l22.992,22.993H27.183L4.189,25.624 L27.183,2.632H46.686z"/></svg>
+  </button>
+  <p id="rightcontrols">
+    <input onchange="Dz.setSlide(this.value)" size="2" id="slideidx" value="0" />/<span id="slidecount">...</span>
+    <button title="Open in a new window" id="popup" onclick="Dz.popup()">
+      <svg width="15px" height="15px" viewBox="0 0 50 50"><path d="M10,0L10,40L50,40L50,0z M0,5L5,5L5,45L45,45L45,50L0,50Z"/></svg>
+    </button>
+  </p>
+</div>
 
 <style>
   html { height: 100%;}
@@ -154,19 +83,160 @@
     top: -5px;
     right: 10px;
   }
-
 </style>
 
-<h1 id="title">...</h1>
-<iframe></iframe>
-<div id="controls">
-  <button title="prev" id="back" onclick="back()">
-    <svg width="15px" height="15px" viewBox="0 0 50 50"><path d="M46.686,2.632L23.694,25.624l22.992,22.993H27.183L4.189,25.624 L27.183,2.632H46.686z"/></svg>
-  </button>
-  <button title="next" id="forward" onclick="forward()">
-    <svg width="15px" height="15px" viewBox="0 0 50 50"><path d="M46.686,2.632L23.694,25.624l22.992,22.993H27.183L4.189,25.624 L27.183,2.632H46.686z"/></svg>
-  </button>
-  <p id="rightcontrols"><input onchange="setSlide(this.value)" size="2" id="slideidx" value="0"></input>/<span id="slidecount">...</span>
-  <button title="Open in a new window" id="popup" onclick="popup()"><svg width="15px" height="15px" viewBox="0 0 50 50"><path d="M10,0L10,40L50,40L50,0z M0,5L5,5L5,45L45,45L45,50L0,50Z"/></svg></button>
-  </p>
-</div>
+<script>
+  var Dz = {
+    view: null,
+    url: null,
+    idx: 1,
+    count: null
+  };
+  
+  Dz.init = function() {
+    this.loadIframe();
+  }
+  
+  Dz.onkeydown = function(aEvent) {
+    // Don't intercept keyboard shortcuts
+    if (aEvent.altKey
+      || aEvent.ctrlKey
+      || aEvent.metaKey
+      || aEvent.shiftKey) {
+      return;
+    }
+    if ( aEvent.keyCode == 37 // left arrow
+      || aEvent.keyCode == 38 // up arrow
+      || aEvent.keyCode == 33 // page up
+    ) {
+      aEvent.preventDefault();
+      this.back();
+    }
+    if ( aEvent.keyCode == 39 // right arrow
+      || aEvent.keyCode == 40 // down arrow
+      || aEvent.keyCode == 34 // page down
+    ) {
+      aEvent.preventDefault();
+      this.forward();
+    }
+    if (aEvent.keyCode == 32) { // space
+      aEvent.preventDefault();
+      this.toggleContent();
+    }
+  }
+  
+  Dz.onmessage = function(aEvent) {
+    if (aEvent.source === this.view) {
+      var args = JSON.parse(aEvent.data);
+      if (args.method === "newslide") {
+        this.idx = ~~args.idx;
+        $("#slideidx").value = this.idx;
+        if (this.idx == 1) {
+          $("#back").disabled = true;
+        } else {
+          $("#back").disabled = false;
+        }
+        if (this.idx == this.count) {
+          $("#forward").disabled = true;
+        } else {
+          $("#forward").disabled = false;
+        }
+      }
+      if (args.method === "registered") {
+        this.count = args.count;
+        $("#slidecount").innerHTML = this.count;
+        $("#title").innerHTML = args.title;
+        document.title = args.title;
+      }
+    }
+  }
+  
+  /* Get url from hash or prompt and store it */
+  
+  Dz.getUrl = function() {
+    var u = window.location.hash.split("#")[1];
+    if (!u) {
+      u = window.prompt("What is the URL of the slides?");
+      if (u) {
+        window.location.hash = u.split("#")[0];
+        return u;
+      }
+      u = "<style>body{background-color:white;color:black}</style>";
+      u += "<strong>ERROR:</strong> No URL specified.<br>";
+      u += "Try<em>: " + document.location + "#yourslides.html</em>";
+      u = "data:text/html," + encodeURIComponent(u);
+    }
+    return u;
+  }
+  
+  Dz.loadIframe = function() {
+    var iframe = $("iframe");
+    iframe.src = this.url = this.getUrl();
+    iframe.onload = function() {
+      Dz.view = this.contentWindow;
+      Dz.view.postMessage("register", "*");
+    }
+  }
+  
+  Dz.toggleContent = function() {
+    this.view.postMessage("toggleContent", "*");
+  }
+  
+  Dz.onhashchange = function() {
+    this.loadIframe();
+  }
+  
+  Dz.back = function() {
+    this.view.postMessage("back", "*");
+  }
+
+  Dz.forward = function() {
+    this.view.postMessage("forward", "*");
+  }
+
+  Dz.setSlide = function(aIdx) {
+    this.view.postMessage("setSlide(" + aIdx + ")", "*");
+  }
+
+  Dz.popup = function() {
+    window.open(this.url + "#" + this.idx, '', 'width=800,height=600,personalbar=0,toolbar=0,scrollbars=1,resizable=1');
+  }
+  
+  window.onload = Dz.init.bind(Dz);
+  window.onkeydown = Dz.onkeydown.bind(Dz);
+  window.onhashchange = Dz.loadIframe.bind(Dz);
+  window.onmessage = Dz.onmessage.bind(Dz);
+</script>
+
+
+<script> // Helpers
+  if (!Function.prototype.bind) {
+    Function.prototype.bind = function (oThis) {
+
+      // closest thing possible to the ECMAScript 5 internal IsCallable
+      // function 
+      if (typeof this !== "function")
+      throw new TypeError(
+        "Function.prototype.bind - what is trying to be fBound is not callable"
+      );
+
+      var aArgs = Array.prototype.slice.call(arguments, 1),
+          fToBind = this,
+          fNOP = function () {},
+          fBound = function () {
+            return fToBind.apply( this instanceof fNOP ? this : oThis || window,
+                   aArgs.concat(Array.prototype.slice.call(arguments)));
+          };
+
+      fNOP.prototype = this.prototype;
+      fBound.prototype = new fNOP();
+
+      return fBound;
+    };
+  }
+
+  var $ = (HTMLElement.prototype.$ = function(aQuery) {
+    return this.querySelector(aQuery);
+  }).bind(document);
+
+</script>
