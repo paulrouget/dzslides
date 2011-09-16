@@ -8,21 +8,46 @@
 
 <section>
     <!-- This is the first slide -->
-    <h1>Foobar.</h1>
+    <h1>My Presentation</h1>
     <footer>by John Doe</footer>
 </section>
 
 <section>
-    <h2>Foo?</h2>
+    <h2>Part one</h2>
 </section>
 
 <section>
-    <h3>No, bar!</h3>
-    <ul class="incremental-list">
-        <li>Text
-        <li>Images
-        <li>Videos
+    <h3>An incremental list</h3>
+    <ul class="incremental">
+      <li>Item 1
+      <li>Item 2
+      <li>Item 3
     </ul>
+</section>
+
+<section>
+  <q>
+    Soothe us with sweet lies. Is that a cooking show? No! I want to
+    live! There are still too many things I don't own!
+  </q>
+</section>
+
+<section>
+    <h2>Part two</h2>
+</section>
+
+<section>
+    <h3>An image</h3>
+    <img src="http://placekitten.com/g/800/600">
+</section>
+
+<section>
+    <h3>A video</h3>
+    <video src="http://videos-cdn.mozilla.net/brand/Mozilla_Firefox_Manifesto_v0.2_640.webm"></video>
+</section>
+
+<section>
+    <h2>End!</h2>
 </section>
 
 <!-- Your Style -->
@@ -33,22 +58,50 @@
 
 <style>
   html { background-color: black; }
-  body {background-color: white;}
+  body { background-color: white; }
   /* A section is a slide. It's size is 800x600, and this will never change */
   section {
       /* The font from Google */
       font-family: 'Oswald', arial, serif;
-      font-size: 2em;
+      font-size: 40px;
   }
-  h1, h2, h3 {
-      margin-top: 50px;
-      text-align: center;
+  h1, h2 {
+    margin-top: 200px;
+    text-align: center;
+    font-size: 80px;
   }
+  h3 {
+    margin: 100px 0 50px 100px;
+  }
+
   ul {
-      margin-left: 200px;
+      margin: 50px 200px;
   }
-  a { color: #FF0066; } a:hover {text-decoration: underline;}
-  footer { position: absolute; bottom: 50px; right: 50px; }
+
+  q {
+    display: inline-block;
+    width: 800px;
+    height: 600px;
+    background-color: black;
+    color: white;
+    font-size: 60px;
+    padding: 50px;
+  }
+
+  img, video {
+    width: 800px;
+    height: 600px;
+    position: absolute;
+    top: 0;
+    background-color: black;
+    z-index: -1;
+  }
+
+  footer {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+  }
 
   /* Transition effect */
   /* Feel free to change the transition effect for original
@@ -67,10 +120,13 @@
   /* Now */
   section[aria-selected] { left: 0; }
   /* After */
-  section[aria-selected] ~ section { left: +150% }
-  
-  .incremental{color:#666;}
-  .incremental-current{color:#F06;}
+  section[aria-selected] ~ section { left: +150%; }
+
+  /* Increment with lists */
+  .incremental > * { opacity: 1; }
+  .incremental > *[aria-selected] { font-size: 150%; opacity: 1; }
+  .incremental > *[aria-selected] ~ * { opacity: 0.1; }
+
 </style>
 
 
@@ -85,7 +141,7 @@
 <!-- Default Style -->
 <style>
   * { margin: 0; padding: 0; }
-  details {display: none;}
+  details { display: none; }
   body {
     width: 800px; height: 600px;
     margin-left: -400px; margin-top: -300px;
@@ -100,14 +156,16 @@
     pointer-events: none;
     width: 100%; height: 100%;
   }
-  section[aria-selected] { pointer-events: auto;}
-  body {display: none}
-  body.loaded {display: block}
+  section[aria-selected] { pointer-events: auto; }
+  body { display: none; }
+  body.loaded { display: block; }
+  .incremental {visibility: hidden}
+  .incremental[active] {visibility: visible}
 </style>
 
 <script>
   var friendWindows = [];
-  var idx = 1;
+  var idx, step;
   var slides;
 
   /* main() */
@@ -115,7 +173,6 @@
   window.onload = function() {
     slides = document.querySelectorAll("body > section");
     onhashchange();
-    setSlide();
     document.body.className = "loaded";
     sortIncrement();
     setupTouchEvents();
@@ -151,6 +208,14 @@
       e.preventDefault();
       forward();
     }
+    if (e.keyCode == 35) { // end
+      e.preventDefault();
+      end();
+    }
+    if (e.keyCode == 36) { // home
+      e.preventDefault();
+      start();
+    }
 
     if ( e.keyCode == 32) { // space
         e.preventDefault();
@@ -164,9 +229,9 @@
     var orgX, newX;
     var tracking = false;
 
-    var body = document.body;
-    body.addEventListener("touchstart", start, false);
-    body.addEventListener("touchmove", move, false);
+    var db = document.body;
+    db.addEventListener("touchstart", start, false);
+    db.addEventListener("touchmove", move, false);
 
     function start(e) {
       e.preventDefault();
@@ -192,14 +257,15 @@
   /* Adapt the size of the slides to the window */
 
   window.onresize = function() {
-    var sx = document.body.clientWidth / window.innerWidth;
-    var sy = document.body.clientHeight / window.innerHeight;
+    var db = document.body;
+    var sx = db.clientWidth / window.innerWidth;
+    var sy = db.clientHeight / window.innerHeight;
     var transform = "scale(" + (1/Math.max(sx, sy)) + ")";
-    document.body.style.MozTransform = transform;
-    document.body.style.WebkitTransform = transform;
-    document.body.style.OTransform = transform;
-    document.body.style.msTransform = transform;
-    document.body.style.transform = transform;
+    db.style.MozTransform = transform;
+    db.style.WebkitTransform = transform;
+    db.style.OTransform = transform;
+    db.style.msTransform = transform;
+    db.style.transform = transform;
   }
   function getDetails(idx) {
     var s = document.querySelector("section:nth-of-type("+ idx +")");
@@ -207,8 +273,8 @@
     return d?d.innerHTML:"";
   }
   window.onmessage = function(e) {
-    msg = e.data;
-    win = e.source;
+    var msg = e.data;
+    var win = e.source;
     if (msg === "register") {
       friendWindows.push(win);
       win.postMessage(JSON.stringify({method: "registered", title: document.title, count: slides.length}), "*");
@@ -221,8 +287,7 @@
     // setSlide(42)
     var r = /setSlide\((\d+)\)/.exec(msg);
     if (r) {
-        idx = r[1];
-        setSlide();
+        setSlide(r[1]);
     }
   }
 
@@ -246,47 +311,48 @@
   /* If the user change the slide number in the URL bar, jump
      to this slide. */
 
+  function setCursor(aIdx, aStep) {
+    aStep = (aStep != 0 && typeof aStep !== "undefined") ? "." + aStep : "";
+    window.location.hash = "#" + aIdx + aStep;
+  }
   window.onhashchange = function(e) {
-    var newidx = ~~window.location.hash.split("#")[1];
-    if (!newidx) newidx = 1;
-    if (newidx == idx) return;
-    idx = newidx;
-    setSlide();
+    var cursor = window.location.hash.split("#"), newidx = 1, newstep = 0;
+    if (cursor.length == 2) {
+      newidx = ~~cursor[1].split(".")[0];
+      newstep = ~~cursor[1].split(".")[1];
+    }
+    if (newidx != idx) setSlide(newidx);
+    setIncremental(newstep);
   }
 
   /* Slide controls */
 
   function back() {
-    var current = document.querySelector("section[aria-selected]");
-    var highlighted = current.getElementsByClassName("incremental-current");
-    if(highlighted.length > 0){
-        highlighted[0].classList.add("incremental");
-        highlighted[0].classList.remove("incremental-current");
-        var backOne = current.getElementsByClassName("incremented");
-        if(backOne.length > 0) {backOne[backOne.length-1].classList.add("incremental-current");backOne[backOne.length-1].classList.remove("incremented");}
-    }else{
-        if (idx == 1) return;
-        idx--;
-        setSlide();
-    }
+    if (idx == 1 && step == 0) return;
+    if (step == 0)
+      setCursor(idx - 1, slides[idx - 2].querySelectorAll('.incremental > *').length);
+    else 
+      setCursor(idx, step - 1);
   }
   
   function forward() {
-    var current = document.querySelector("section[aria-selected]");
-    var nextUp = current.getElementsByClassName("incremental");
-    if(nextUp.length > 0){
-        var highlighted = current.getElementsByClassName("incremental-current");
-        if(highlighted.length > 0) {highlighted[0].classList.add("incremented");highlighted[0].classList.remove("incremental-current");}
-        nextUp[0].classList.add("incremental-current");
-        nextUp[0].classList.remove("incremental");
-    }else{
-        if (idx >= slides.length) return;
-        idx++;
-        setSlide();
-    }
+    if (idx >= slides.length && step >= slides[idx - 1].querySelectorAll('.incremental > *').length) return;
+    if (step >= slides[idx - 1].querySelectorAll('.incremental > *').length)
+      setCursor(idx + 1, 0);
+    else
+      setCursor(idx, step + 1);
   }
-  
-  function setSlide() {
+  function start() {
+    setCursor(1, 0);
+  }
+  function end() {
+    var lastIdx = slides.length;
+    var lastStep = slides[lastIdx - 1].querySelectorAll('.incremental > *').length;
+    setCursor(lastIdx, lastStep);
+  }
+
+  function setSlide(aIdx) {
+    idx = aIdx;
     var old = document.querySelector("section[aria-selected]");
     var next = document.querySelector("section:nth-of-type("+ idx +")");
     if (old) {
@@ -299,18 +365,46 @@
       var video = next.querySelector("video");
       if (video) { video.play(); }
     } else {
-      console.warn("No such slide: " + idx);
       idx = 0;
-      for (var i = 0; i < slides.length; i++) {
+      for (var i = 0, l = slides.length; i < l; i++) {
           if (slides[i].hasAttribute("aria-selected")) {
               idx = i + 1;
           }
       }
     }
-    window.location.hash = idx;
-    for (var i = 0; i < friendWindows.length; i++) {
+    for (var i = 0, l = friendWindows.length; i < l; i++) {
         friendWindows[i].postMessage(JSON.stringify({method: "newslide", details: getDetails(idx), idx: idx}), "*");
     }
   }
+  function setIncremental(aStep) {
+    step = aStep;
+    var old = slides[idx-1].querySelector('.incremental > *[aria-selected]');
+    if (old)
+      old.removeAttribute('aria-selected');
+    var incrementals = slides[idx-1].querySelectorAll('.incremental');
+    if (step == 0) {
+      for (var i = 0; i < incrementals.length; i++) {
+        incrementals[i].removeAttribute('active');
+      }
+      return;
+    }
+    var next = slides[idx-1].querySelectorAll('.incremental > *')[step-1];
+    if (next) {
+      next.setAttribute('aria-selected', true);
+      next.parentNode.setAttribute('active', true);
+      var found = false;
+      for (var i = 0; i < incrementals.length; i++) {
+        if (incrementals[i] != next.parentNode)
+          if (found)
+            incrementals[i].removeAttribute('active');
+          else
+            incrementals[i].setAttribute('active', true);
+        else
+          found = true;
+      }
+    } else {
+      setCursor(idx, 0);
+    }
+    return next;
+  }
 </script>
-<!-- vim: set fdm=marker: }}} -->
