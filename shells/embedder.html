@@ -131,16 +131,8 @@
       if (args.method === "newslide") {
         this.idx = ~~args.idx;
         $("#slideidx").value = this.idx;
-        if (this.idx == 1) {
-          $("#back").disabled = true;
-        } else {
-          $("#back").disabled = false;
-        }
-        if (this.idx == this.count) {
-          $("#forward").disabled = true;
-        } else {
-          $("#forward").disabled = false;
-        }
+        $("#back").disabled = this.idx == 1;
+        $("#forward").disabled = this.idx == this.count;
       }
       if (args.method === "registered") {
         this.count = args.count;
