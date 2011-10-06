@@ -234,7 +234,7 @@
     var future = $("#future iframe");
     present.src = future.src = this.url = this.getUrl();
     present.onload = future.onload = function() {
-      var id = this.parentElement.id;
+      var id = this.parentNode.id;
       Dz.views[id] = this.contentWindow;
       if (id == 'present' && Dz.views.present)
         Dz.views.present.postMessage("register", "*");
