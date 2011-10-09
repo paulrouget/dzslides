@@ -111,6 +111,7 @@
   section {
       -moz-transition: left 400ms linear 0s;
       -webkit-transition: left 400ms linear 0s;
+      -o-transition: left 400ms linear 0s;
       -ms-transition: left 400ms linear 0s;
       transition: left 400ms linear 0s;
   }
@@ -132,7 +133,7 @@
 
   /* The items to-be-selected */
   .incremental > *[aria-selected] ~ * { opacity: 0.2; }
-
+  
 </style>
 
 <!-- {{{{ dzslides core
@@ -177,7 +178,8 @@
     remoteWindows: [],
     idx: -1,
     step: 0,
-    slides: null
+    slides: null,
+    isOpera: Object.prototype.toString.call(window.opera) == '[object Opera]'
   };
 
   Dz.init = function() {
@@ -266,6 +268,12 @@
     db.style.MozTransform = transform;
     db.style.WebkitTransform = transform;
     db.style.OTransform = transform;
+    /*set the scale back to 1 on all sections so we have a smooth animation, only needed for Opera*/
+    if (this.isOpera) {
+      for (var i = 0, l = this.slides.length; i < l; i++) {
+          this.slides[i].style.OTransform = "scale(1)";
+      }
+    }
     db.style.msTransform = transform;
     db.style.transform = transform;
   }
@@ -383,6 +391,9 @@
     var next = $("section:nth-of-type("+ this.idx +")");
     if (old) {
       old.removeAttribute("aria-selected");
+      if (this.isOpera) {
+          old.className = 'o-hidesection';
+      }
       var video = old.$("video");
       if (video) {
         video.pause();
@@ -390,6 +401,9 @@
     }
     if (next) {
       next.setAttribute("aria-selected", "true");
+      if (this.isOpera) {
+          next.className = "o-showsection";
+      }
       var video = next.$("video");
       if (video) {
         video.play();
@@ -441,11 +455,6 @@
     return next;
   }
 
-  window.onload = Dz.init.bind(Dz);
-  window.onkeydown = Dz.onkeydown.bind(Dz);
-  window.onresize = Dz.onresize.bind(Dz);
-  window.onhashchange = Dz.onhashchange.bind(Dz);
-  window.onmessage = Dz.onmessage.bind(Dz);
 </script>
 
 
@@ -474,6 +483,13 @@
       return fBound;
     };
   }
+  
+  // moved the eventlisteners here, so binding also works in Opera
+  window.onload = Dz.init.bind(Dz);
+  window.onkeydown = Dz.onkeydown.bind(Dz);
+  window.onresize = Dz.onresize.bind(Dz);
+  window.onhashchange = Dz.onhashchange.bind(Dz);
+  window.onmessage = Dz.onmessage.bind(Dz);
 
   var $ = (HTMLElement.prototype.$ = function(aQuery) {
     return this.querySelector(aQuery);
@@ -485,7 +501,7 @@
 
   NodeList.prototype.forEach = function(fun) {
     if (typeof fun !== "function") throw new TypeError();
-    for (var i = 0; i < this.length; i++) {
+    for (var i = 0, l = this.length; i < l; i++) {
       fun.call(this, this[i]);
     }
   }

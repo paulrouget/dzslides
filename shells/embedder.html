@@ -63,14 +63,15 @@
     font-size: 12px;
     text-align: center;
   }
-  #controls path { fill: white; }
-  #controls button[disabled] path {fill: #333;}
+  #controls path { fill: black; }
+  #controls button[disabled] path {fill: #666;}
   #forward {-moz-transform: scaleX(-1);-webkit-transform: scaleX(-1);-o-transform: scaleX(-1);-ms-transform: scaleX(-1);transform: scaleX(-1);}
   button {
-    background-color: transparent;
+    background-color: rgba(255, 255, 255, 0.5);
     border: none;
     cursor: pointer;
   }
+  #controls button[disabled] img { opacity: 0.4; }
   #slideidx {
     border: none;
     background-color: rgba(255, 255, 255, 0.2);
@@ -94,7 +95,58 @@
   };
   
   Dz.init = function() {
+    this.doCompatibilityChecks();
     this.loadIframe();
+  }
+  
+  /**
+   * Testing method for inline svg support
+   * 
+   * @return boolean
+   */
+  Dz.hasInlineSvg = function() {
+    var div = document.createElement('div');
+    div.innerHTML = '<svg/>';
+    return (div.firstChild && div.firstChild.namespaceURI) == 'http://www.w3.org/2000/svg';
+  }
+  
+  /**
+   * Compatibility check(s) method which supports following functionalities:
+   * - fallback for browsers that don't support inline svg
+   */
+  Dz.doCompatibilityChecks = function() {
+    
+    if (!this.hasInlineSvg()) {
+      //Opera doesn't work with the NodeList forEach prototype, so we fallback to the Array version
+      var svgElms = $$('svg');
+      Array.prototype.forEach.call(svgElms, function(aNode, aIndex, aNodeList) {
+          // let's work on a temp Node, thus be friendly to the current DOM
+          var tmpNode = aNode.cloneNode(true);
+          var xmlns = tmpNode.getAttribute('xmlns');
+          if (!xmlns) { //we need a namespace if not set
+              tmpNode.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+          }
+          
+          var elmTxt = (new XMLSerializer()).serializeToString(tmpNode);
+          var escapedHtmlElement = window.btoa(elmTxt);
+          var replacement = document.createElement("img");
+          replacement.alt = "";
+          replacement.src = "data:image/svg+xml;base64,"+escapedHtmlElement+"";
+          var w = tmpNode.getAttribute('width');
+          if (w) {
+              replacement.width = parseInt(w);
+          }
+          var h = tmpNode.getAttribute('height');
+          if (h) {
+              replacement.height = parseInt(h);
+          }
+          // replace the current svg Node
+          aNode.parentNode.replaceChild(replacement, aNode);
+          // cleanup our leftovers (and free up some memory)
+          tmpNode = replacement = escapedHtmlElement = null;
+      });
+      svgElms = null;
+    }
   }
   
   Dz.onkeydown = function(aEvent) {
@@ -144,7 +196,6 @@
   }
   
   /* Get url from hash or prompt and store it */
-  
   Dz.getUrl = function() {
     var u = window.location.hash.split("#")[1];
     if (!u) {
@@ -194,10 +245,6 @@
     window.open(this.url + "#" + this.idx, '', 'width=800,height=600,personalbar=0,toolbar=0,scrollbars=1,resizable=1');
   }
   
-  window.onload = Dz.init.bind(Dz);
-  window.onkeydown = Dz.onkeydown.bind(Dz);
-  window.onhashchange = Dz.loadIframe.bind(Dz);
-  window.onmessage = Dz.onmessage.bind(Dz);
 </script>
 
 
@@ -226,9 +273,19 @@
       return fBound;
     };
   }
+  
+  // moved the eventlisteners here, so binding also works in Opera
+  window.onload = Dz.init.bind(Dz);
+  window.onkeydown = Dz.onkeydown.bind(Dz);
+  window.onhashchange = Dz.loadIframe.bind(Dz);
+  window.onmessage = Dz.onmessage.bind(Dz);
 
   var $ = (HTMLElement.prototype.$ = function(aQuery) {
     return this.querySelector(aQuery);
+  }).bind(document);
+  
+  var $$ = (HTMLElement.prototype.$$ = function(aQuery) {
+    return this.querySelectorAll(aQuery);
   }).bind(document);
 
 </script>
