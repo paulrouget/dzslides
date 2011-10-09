@@ -7,7 +7,7 @@
 <iframe></iframe>
 <div id="controls">
   <button title="prev" id="back" onclick="Dz.back()">
-    <svg width="15px" height="15px" viewBox="0 0 50 50"><path d="M46.686,2.632L23.694,25.624l22.992,22.993H27.183L4.189,25.624 L27.183,2.632H46.686z"></path></svg>
+    <svg width="15px" height="15px" viewBox="0 0 50 50"><path d="M46.686,2.632L23.694,25.624l22.992,22.993H27.183L4.189,25.624 L27.183,2.632H46.686z"/></svg>
   </button>
   <button title="next" id="forward" onclick="Dz.forward()">
     <svg width="15px" height="15px" viewBox="0 0 50 50"><path d="M46.686,2.632L23.694,25.624l22.992,22.993H27.183L4.189,25.624 L27.183,2.632H46.686z"/></svg>
@@ -63,11 +63,11 @@
     font-size: 12px;
     text-align: center;
   }
-  #controls path { fill: black /*white*/; }
-  #controls button[disabled] path {fill: #666 /*#333*/;}
+  #controls path { fill: black; }
+  #controls button[disabled] path {fill: #666;}
   #forward {-moz-transform: scaleX(-1);-webkit-transform: scaleX(-1);-o-transform: scaleX(-1);-ms-transform: scaleX(-1);transform: scaleX(-1);}
   button {
-    background-color: rgba(255, 255, 255, 0.5) /*transparent*/;
+    background-color: rgba(255, 255, 255, 0.5);
     border: none;
     cursor: pointer;
   }
@@ -96,17 +96,6 @@
   
   Dz.init = function() {
     this.doCompatibilityChecks();
-    //svgElms.forEach(function(aNode) {
-        /*if (aNode != next.parentNode)
-          if (found)
-            aNode.removeAttribute('active');
-          else
-            aNode.setAttribute('active', true);
-        else
-          found = true;*/
-      //   console.log( aNode );
-      //});
-      
     this.loadIframe();
   }
   
@@ -123,52 +112,25 @@
   
   /**
    * Compatibility check(s) method which supports following functionalities:
-   * - fallback for browsers who don't support inline svg
+   * - fallback for browsers that don't support inline svg
    */
   Dz.doCompatibilityChecks = function() {
+    
     if (!this.hasInlineSvg()) {
       //Opera doesn't work with the NodeList forEach prototype, so we fallback to the Array version
-      // <svg width="15px" height="15px" viewBox="0 0 50 50"><path d="M10,0L10,40L50,40L50,0z M0,5L5,5L5,45L45,45L45,50L0,50Z"/></svg>
       var svgElms = $$('svg');
       Array.prototype.forEach.call(svgElms, function(aNode, aIndex, aNodeList) {
-        //if (aNode.outerHTML) {
-          
-          // let's work on a temp Node, therefor be friendly to the current DOM
+          // let's work on a temp Node, thus be friendly to the current DOM
           var tmpNode = aNode.cloneNode(true);
-console.log( tmpNode );
-          var xmlns = tmpNode.getAttribute('xmlns'); //xmlns="http://www.w3.org/2000/svg"
-console.log("ns: "+(!xmlns)+" "+xmlns);
-          if (!xmlns) {
-              //replacement.xmlns = ns.svg;
+          var xmlns = tmpNode.getAttribute('xmlns');
+          if (!xmlns) { //we need a namespace if not set
               tmpNode.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
           }
-console.log("outerHTML(1)    "+tmpNode.outerHTML);
-console.log( (new XMLSerializer()).serializeToString(tmpNode) );
-
-          // http://code.jquery.com/jquery-latest.js
-          /*var rxhtmlTag = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/ig;
-          rxhtmlTag = /^<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/ig;
-          //rxhtmlTag = /^(?:[^#<]*(<[\w\W]+>)[^>]*$|#([\w\-]*)$)/
-          var value = rxhtmlTag.exec(tmpNode.outerHTML);// tmpNode.outerHTML.replace(rxhtmlTag, "<$1></$2>");
-console.log("outerHTML(2)    "+value);*/
-
-          /*var doc = (new DOMParser()).parseFromString(tmpNode.outerHTML,'text/xml');
-console.log("outerHTML(2)    ");
-console.log(doc);
-console.log( (new XMLSerializer()).serializeToString(doc) );*/
           
-          /*var tmp = document.createElement("div");
-          //tmp.appendChild(aNode);
-          tmp.appendChild(tmpNode);
-console.log("innerHTML    "+tmp.innerHTML);*/
-          
-          var elmTxt = (new XMLSerializer()).serializeToString(tmpNode);//tmp.innerHTML;
-          //var escapedHtmlElement = escape(tmp.innerHTML);//aNode.outerHTML);
-          var escapedHtmlElement = window.btoa(elmTxt);//aNode.outerHTML);
-console.log("    "+escapedHtmlElement);
+          var elmTxt = (new XMLSerializer()).serializeToString(tmpNode);
+          var escapedHtmlElement = window.btoa(elmTxt);
           var replacement = document.createElement("img");
           replacement.alt = "";
-          //replacement.src = "data:image/svg+xml,"+escapedHtmlElement+"";
           replacement.src = "data:image/svg+xml;base64,"+escapedHtmlElement+"";
           var w = tmpNode.getAttribute('width');
           if (w) {
@@ -178,16 +140,12 @@ console.log("    "+escapedHtmlElement);
           if (h) {
               replacement.height = parseInt(h);
           }
-          
-console.log(replacement);
-          //aNode.parentNode.replaceChild(replacement, aNode);
-          aNode.parentNode.appendChild(replacement);
-          
+          // replace the current svg Node
+          aNode.parentNode.replaceChild(replacement, aNode);
           // cleanup our leftovers (and free up some memory)
           tmpNode = replacement = escapedHtmlElement = null;
-          
-        //}
       });
+      svgElms = null;
     }
   }
   
@@ -238,7 +196,6 @@ console.log(replacement);
   }
   
   /* Get url from hash or prompt and store it */
-  
   Dz.getUrl = function() {
     var u = window.location.hash.split("#")[1];
     if (!u) {
@@ -288,7 +245,6 @@ console.log(replacement);
     window.open(this.url + "#" + this.idx, '', 'width=800,height=600,personalbar=0,toolbar=0,scrollbars=1,resizable=1');
   }
   
-  
 </script>
 
 
@@ -318,6 +274,7 @@ console.log(replacement);
     };
   }
   
+  // moved the eventlisteners here, so binding also works in Opera
   window.onload = Dz.init.bind(Dz);
   window.onkeydown = Dz.onkeydown.bind(Dz);
   window.onhashchange = Dz.loadIframe.bind(Dz);
