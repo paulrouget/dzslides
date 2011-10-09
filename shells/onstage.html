@@ -279,7 +279,6 @@
     }, 1000);
   }
   
-  
 </script>
 
 
@@ -309,6 +308,7 @@
     };
   }
   
+  // moved the eventlisteners here, so binding also works in Opera
   window.onload = Dz.init.bind(Dz);
   window.onkeydown = Dz.onkeydown.bind(Dz);
   window.onhashchange = Dz.loadIframes.bind(Dz);
