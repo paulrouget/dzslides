@@ -54,7 +54,7 @@
 <!-- Define the style of your presentation -->
 
 <!-- Maybe a font from http://www.google.com/webfonts ? -->
-<link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'>
+<!-- <link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'> -->
 
 <style>
   html { background-color: black; }
@@ -62,7 +62,7 @@
   /* A section is a slide. It's size is 800x600, and this will never change */
   section {
       /* The font from Google */
-      font-family: 'Oswald', arial, serif;
+      font-family: /*'Oswald',*/ arial, serif;
       font-size: 40px;
   }
   h1, h2 {
@@ -111,6 +111,7 @@
   section {
       -moz-transition: left 400ms linear 0s;
       -webkit-transition: left 400ms linear 0s;
+      -o-transition: left 400ms linear 0s; /*this line was removed along the way, not sure why exactly but as of Opera 10.1 transitions are supported*/
       -ms-transition: left 400ms linear 0s;
       transition: left 400ms linear 0s;
   }
@@ -133,6 +134,9 @@
   /* The items to-be-selected */
   .incremental > *[aria-selected] ~ * { opacity: 0.2; }
 
+  /*dummy classes used by Opera to trigger layout on a section*/
+  /*.o-showsection { }
+    .o-hidesection { }*/
 </style>
 
 <!-- {{{{ dzslides core
@@ -173,6 +177,8 @@
 </style>
 
 <script>
+  var isOpera = Object.prototype.toString.call(window.opera) == '[object Opera]';
+  
   var Dz = {
     remoteWindows: [],
     idx: -1,
@@ -266,6 +272,12 @@
     db.style.MozTransform = transform;
     db.style.WebkitTransform = transform;
     db.style.OTransform = transform;
+    /*set the scale back to 1 on all sections so we have a smooth animation, only needed for Opera*/
+    if (isOpera) {
+      for (var i = 0, l = this.slides.length; i < l; i++) {
+          this.slides[i].style.OTransform = "scale(1)";
+      }
+    }
     db.style.msTransform = transform;
     db.style.transform = transform;
   }
@@ -383,6 +395,9 @@
     var next = $("section:nth-of-type("+ this.idx +")");
     if (old) {
       old.removeAttribute("aria-selected");
+      if (isOpera) { /*dummy classes for Opera to trigger layout/repaint on a section*/
+          old.className = 'o-hidesection';
+      }
       var video = old.$("video");
       if (video) {
         video.pause();
@@ -390,6 +405,9 @@
     }
     if (next) {
       next.setAttribute("aria-selected", "true");
+      if (isOpera) { /*dummy classes for Opera to trigger layout/repaint on a section*/
+          next.className = "o-showsection";
+      }
       var video = next.$("video");
       if (video) {
         video.play();
@@ -441,11 +459,6 @@
     return next;
   }
 
-  window.onload = Dz.init.bind(Dz);
-  window.onkeydown = Dz.onkeydown.bind(Dz);
-  window.onresize = Dz.onresize.bind(Dz);
-  window.onhashchange = Dz.onhashchange.bind(Dz);
-  window.onmessage = Dz.onmessage.bind(Dz);
 </script>
 
 
@@ -474,6 +487,12 @@
       return fBound;
     };
   }
+  
+  window.onload = Dz.init.bind(Dz);
+  window.onkeydown = Dz.onkeydown.bind(Dz);
+  window.onresize = Dz.onresize.bind(Dz);
+  window.onhashchange = Dz.onhashchange.bind(Dz);
+  window.onmessage = Dz.onmessage.bind(Dz);
 
   var $ = (HTMLElement.prototype.$ = function(aQuery) {
     return this.querySelector(aQuery);
