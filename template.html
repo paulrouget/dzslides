@@ -54,7 +54,7 @@
 <!-- Define the style of your presentation -->
 
 <!-- Maybe a font from http://www.google.com/webfonts ? -->
-<!-- <link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'> -->
+<link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'>
 
 <style>
   html { background-color: black; }
@@ -62,7 +62,7 @@
   /* A section is a slide. It's size is 800x600, and this will never change */
   section {
       /* The font from Google */
-      font-family: /*'Oswald',*/ arial, serif;
+      font-family: 'Oswald', arial, serif;
       font-size: 40px;
   }
   h1, h2 {
@@ -111,7 +111,7 @@
   section {
       -moz-transition: left 400ms linear 0s;
       -webkit-transition: left 400ms linear 0s;
-      -o-transition: left 400ms linear 0s; /*this line was removed along the way, not sure why exactly but as of Opera 10.1 transitions are supported*/
+      -o-transition: left 400ms linear 0s;
       -ms-transition: left 400ms linear 0s;
       transition: left 400ms linear 0s;
   }
@@ -133,10 +133,7 @@
 
   /* The items to-be-selected */
   .incremental > *[aria-selected] ~ * { opacity: 0.2; }
-
-  /*dummy classes used by Opera to trigger layout on a section*/
-  /*.o-showsection { }
-    .o-hidesection { }*/
+  
 </style>
 
 <!-- {{{{ dzslides core
@@ -177,13 +174,12 @@
 </style>
 
 <script>
-  var isOpera = Object.prototype.toString.call(window.opera) == '[object Opera]';
-  
   var Dz = {
     remoteWindows: [],
     idx: -1,
     step: 0,
-    slides: null
+    slides: null,
+    isOpera: Object.prototype.toString.call(window.opera) == '[object Opera]'
   };
 
   Dz.init = function() {
@@ -273,7 +269,7 @@
     db.style.WebkitTransform = transform;
     db.style.OTransform = transform;
     /*set the scale back to 1 on all sections so we have a smooth animation, only needed for Opera*/
-    if (isOpera) {
+    if (this.isOpera) {
       for (var i = 0, l = this.slides.length; i < l; i++) {
           this.slides[i].style.OTransform = "scale(1)";
       }
@@ -395,7 +391,7 @@
     var next = $("section:nth-of-type("+ this.idx +")");
     if (old) {
       old.removeAttribute("aria-selected");
-      if (isOpera) { /*dummy classes for Opera to trigger layout/repaint on a section*/
+      if (this.isOpera) {
           old.className = 'o-hidesection';
       }
       var video = old.$("video");
@@ -405,7 +401,7 @@
     }
     if (next) {
       next.setAttribute("aria-selected", "true");
-      if (isOpera) { /*dummy classes for Opera to trigger layout/repaint on a section*/
+      if (this.isOpera) {
           next.className = "o-showsection";
       }
       var video = next.$("video");
@@ -488,6 +484,7 @@
     };
   }
   
+  // moved the eventlisteners here, so binding also works in Opera
   window.onload = Dz.init.bind(Dz);
   window.onkeydown = Dz.onkeydown.bind(Dz);
   window.onresize = Dz.onresize.bind(Dz);
@@ -504,7 +501,7 @@
 
   NodeList.prototype.forEach = function(fun) {
     if (typeof fun !== "function") throw new TypeError();
-    for (var i = 0; i < this.length; i++) {
+    for (var i = 0, l = this.length; i < l; i++) {
       fun.call(this, this[i]);
     }
   }
