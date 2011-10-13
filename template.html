@@ -440,12 +440,6 @@
     }
     return next;
   }
-
-  window.onload = Dz.init.bind(Dz);
-  window.onkeydown = Dz.onkeydown.bind(Dz);
-  window.onresize = Dz.onresize.bind(Dz);
-  window.onhashchange = Dz.onhashchange.bind(Dz);
-  window.onmessage = Dz.onmessage.bind(Dz);
 </script>
 
 
@@ -474,6 +468,12 @@
       return fBound;
     };
   }
+  
+  window.onload = Dz.init.bind(Dz);
+  window.onkeydown = Dz.onkeydown.bind(Dz);
+  window.onresize = Dz.onresize.bind(Dz);
+  window.onhashchange = Dz.onhashchange.bind(Dz);
+  window.onmessage = Dz.onmessage.bind(Dz);
 
   var $ = (HTMLElement.prototype.$ = function(aQuery) {
     return this.querySelector(aQuery);
