@@ -193,11 +193,6 @@
   Dz.popup = function() {
     window.open(this.url + "#" + this.idx, '', 'width=800,height=600,personalbar=0,toolbar=0,scrollbars=1,resizable=1');
   }
-  
-  window.onload = Dz.init.bind(Dz);
-  window.onkeydown = Dz.onkeydown.bind(Dz);
-  window.onhashchange = Dz.loadIframe.bind(Dz);
-  window.onmessage = Dz.onmessage.bind(Dz);
 </script>
 
 
@@ -226,6 +221,11 @@
       return fBound;
     };
   }
+  
+  window.onload = Dz.init.bind(Dz);
+  window.onkeydown = Dz.onkeydown.bind(Dz);
+  window.onhashchange = Dz.loadIframe.bind(Dz);
+  window.onmessage = Dz.onmessage.bind(Dz);
 
   var $ = (HTMLElement.prototype.$ = function(aQuery) {
     return this.querySelector(aQuery);
