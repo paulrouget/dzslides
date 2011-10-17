@@ -202,8 +202,6 @@
         $("#slideidx").innerHTML = this.idx;
         $("#nextslideidx").innerHTML = this.idx + 1;
         this.views.future.postMessage("setSlide(" + (this.idx + 1) + ")", "*");
-        if (this.views.remote)
-          this.views.remote.postMessage("setSlide(" + this.idx + ")", "*");
       }
       if (args.method === "registered") {
         $("#slidecount").innerHTML = args.count;
@@ -253,10 +251,13 @@
   
   Dz.back = function() {
     this.views.present.postMessage("back", "*");
+    this.views.remote.postMessage("back", "*");
   }
 
   Dz.forward = function() {
+    console.log("Sending forward");
     this.views.present.postMessage("forward", "*");
+    this.views.remote.postMessage("forward", "*");
   }
 
   Dz.setSlide = function(aIdx) {
