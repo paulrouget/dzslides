@@ -290,6 +290,10 @@
       this.back();
     if (msg[0] === "FORWARD")
       this.forward();
+    if (msg[0] === "START")
+      this.goStart();
+    if (msg[0] === "END")
+      this.goEnd();
     if (msg[0] === "TOGGLE_CONTENT")
       this.toggleContent();
     if (msg[0] === "SET_CURSOR")

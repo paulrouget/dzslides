@@ -187,6 +187,14 @@
       aEvent.preventDefault();
       this.forward();
     }
+    if (aEvent.keyCode == 35) { // end
+      aEvent.preventDefault();
+      this.goEnd();
+    }
+    if (aEvent.keyCode == 36) { // home
+      aEvent.preventDefault();
+      this.goStart();
+    }
     if (aEvent.keyCode == 32) { // space
       aEvent.preventDefault();
       this.toggleContent();
@@ -261,6 +269,14 @@
 
   Dz.forward = function() {
     this.views.present.postMessage("FORWARD", "*");
+  }
+
+  Dz.goStart = function() {
+    this.views.present.postMessage("START", "*");
+  }
+
+  Dz.goEnd = function() {
+    this.views.present.postMessage("END", "*");
   }
   
   Dz.setCursor = function(aCursor) {
