@@ -135,18 +135,19 @@
   
   Dz.onmessage = function(aEvent) {
     if (aEvent.source === this.view) {
-      var msg = aEvent.data.split(" ");
-      if (msg[0] === "CURSOR") {
-        var cursor = msg[1].split(".");
+      var argv = aEvent.data.split(" "), argc = argv.length;
+      argv.forEach(function(e, i, a) { a[i] = decodeURIComponent(e) });
+      if (argv[0] === "CURSOR" && argc === 2) {
+        var cursor = argv[1].split(".");
         this.idx = ~~cursor[0];
         this.step = ~~cursor[1];
         $("#slideidx").value = this.idx;
         $("#back").disabled = this.idx == 1;
         $("#forward").disabled = this.idx == this.count;
       }
-      if (msg[0] === "REGISTERED") {
-        $("#slidecount").innerHTML = msg.pop();
-        document.title = $("#title").innerHTML = msg.slice(1).join(' ');
+      if (argv[0] === "REGISTERED" && argc === 3) {
+        $("#slidecount").innerHTML = argv[2];
+        document.title = $("#title").innerHTML = argv[1];
       }
     }
   }
@@ -174,12 +175,12 @@
     iframe.src = this.url = this.getUrl();
     iframe.onload = function() {
       Dz.view = this.contentWindow;
-      Dz.view.postMessage("REGISTER", "*");
+      Dz.postMsg(Dz.view, "REGISTER");
     }
   }
   
   Dz.toggleContent = function() {
-    this.view.postMessage("TOGGLE_CONTENT", "*");
+    this.postMsg(this.view, "TOGGLE_CONTENT");
   }
   
   Dz.onhashchange = function() {
@@ -187,27 +188,34 @@
   }
   
   Dz.back = function() {
-    this.view.postMessage("BACK", "*");
+    this.postMsg(this.view, "BACK");
   }
 
   Dz.forward = function() {
-    this.view.postMessage("FORWARD", "*");
+    this.postMsg(this.view, "FORWARD");
   }
 
   Dz.goStart = function() {
-    this.view.postMessage("START", "*");
+    this.postMsg(this.view, "START");
   }
 
   Dz.goEnd = function() {
-    this.view.postMessage("END", "*");
+    this.postMsg(this.view, "END");
   }
 
   Dz.setCursor = function(aCursor) {
-    this.view.postMessage("SET_CURSOR " + aCursor, "*");
+    this.postMsg(this.view, "SET_CURSOR", aCursor);
   }
 
   Dz.popup = function() {
     window.open(this.url + "#" + this.idx, '', 'width=800,height=600,personalbar=0,toolbar=0,scrollbars=1,resizable=1');
+  }
+  
+  Dz.postMsg = function(aWin, aMsg) { // [arg0, [arg1...]]
+    aMsg = [aMsg];
+    for (var i = 2; i < arguments.length; i++)
+      aMsg.push(encodeURIComponent(arguments[i]));
+    aWin.postMessage(aMsg.join(" "), "*");
   }
   
   window.onload = Dz.init.bind(Dz);

@@ -278,30 +278,31 @@
   }
 
   Dz.onmessage = function(aEvent) {
-    var msg = aEvent.data.split(" ");
+    var argv = aEvent.data.split(" "), argc = argv.length;
+    argv.forEach(function(e, i, a) { a[i] = decodeURIComponent(e) });
     var win = aEvent.source;
-    if (msg[0] === "REGISTER") {
+    if (argv[0] === "REGISTER" && argc === 1) {
       this.remoteWindows.push(win);
-      win.postMessage("REGISTERED " + document.title + " " + this.slides.length, "*");
-      win.postMessage("CURSOR " + this.idx + "." + this.step, "*");
+      this.postMsg(win, "REGISTERED", document.title, this.slides.length);
+      this.postMsg(win, "CURSOR", this.idx + "." + this.step);
       return;
     }
-    if (msg[0] === "BACK")
+    if (argv[0] === "BACK" && argc === 1)
       this.back();
-    if (msg[0] === "FORWARD")
+    if (argv[0] === "FORWARD" && argc === 1)
       this.forward();
-    if (msg[0] === "START")
+    if (argv[0] === "START" && argc === 1)
       this.goStart();
-    if (msg[0] === "END")
+    if (argv[0] === "END" && argc === 1)
       this.goEnd();
-    if (msg[0] === "TOGGLE_CONTENT")
+    if (argv[0] === "TOGGLE_CONTENT" && argc === 1)
       this.toggleContent();
-    if (msg[0] === "SET_CURSOR")
-      window.location.hash = "#" + msg[1];
-    if (msg[0] === "GET_CURSOR")
-      win.postMessage("CURSOR " + this.idx + "." + this.step, "*");
-    if (msg[0] === "GET_NOTES")
-      win.postMessage("NOTES " + this.getDetails(this.idx), "*");
+    if (argv[0] === "SET_CURSOR" && argc === 2)
+      window.location.hash = "#" + argv[1];
+    if (argv[0] === "GET_CURSOR" && argc === 1)
+      this.postMsg(win, "CURSOR", this.idx + "." + this.step);
+    if (argv[0] === "GET_NOTES" && argc === 1)
+      this.postMsg(win, "NOTES", this.getDetails(this.idx));
   }
 
   Dz.toggleContent = function() {
@@ -334,7 +335,7 @@
     if (cursor.length == 2) {
       newidx = ~~cursor[1].split(".")[0];
       newstep = ~~cursor[1].split(".")[1];
-      if (newstep > Dz.slides[newidx-1].$$('.incremental > *').length) {
+      if (newstep > Dz.slides[newidx - 1].$$('.incremental > *').length) {
         newstep = 0;
         newidx++;
       }
@@ -346,7 +347,7 @@
       this.setIncremental(newstep);
     }
     for (var i = 0; i < this.remoteWindows.length; i++) {
-      this.remoteWindows[i].postMessage("CURSOR " + this.idx + "." + this.step, "*");
+      this.postMsg(this.remoteWindows[i], "CURSOR", this.idx + "." + this.step);
     }
   }
 
@@ -439,6 +440,13 @@
       setCursor(this.idx, 0);
     }
     return next;
+  }
+  
+  Dz.postMsg = function(aWin, aMsg) { // [arg0, [arg1...]]
+    aMsg = [aMsg];
+    for (var i = 2; i < arguments.length; i++)
+      aMsg.push(encodeURIComponent(arguments[i]));
+    aWin.postMessage(aMsg.join(" "), "*");
   }
 
   window.onload = Dz.init.bind(Dz);
