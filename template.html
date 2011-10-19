@@ -178,7 +178,9 @@
     idx: -1,
     step: 0,
     slides: null,
-    params: {}
+    params: {
+      autoplay: "1"
+    }
   };
 
   Dz.init = function() {
@@ -409,7 +411,7 @@
     if (next) {
       next.setAttribute("aria-selected", "true");
       var video = next.$("video");
-      if (video) {
+      if (video && !!+this.params.autoplay) {
         video.play();
       }
     } else {

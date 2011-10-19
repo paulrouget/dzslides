@@ -245,7 +245,8 @@
   Dz.loadIframes = function() {
     var present = $("#present iframe");
     var future = $("#future iframe");
-    present.src = future.src = this.url = this.getUrl();
+    this.url = this.getUrl();
+    present.src = future.src = this.url + '?autoplay=0';
     present.onload = future.onload = function() {
       var id = this.parentNode.id;
       Dz.views[id] = this.contentWindow;
@@ -255,7 +256,6 @@
   }
   
   Dz.toggleContent = function() {
-    this.postMsg(this.views.present, "TOGGLE_CONTENT");
     if (this.views.remote)
       this.postMsg(this.views.remote, "TOGGLE_CONTENT");
   }
