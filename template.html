@@ -173,15 +173,25 @@
     remoteWindows: [],
     idx: -1,
     step: 0,
-    slides: null
+    slides: null,
+    params: {}
   };
 
   Dz.init = function() {
     document.body.className = "loaded";
     this.slides = $$("body > section");
+    this.setupParams();
     this.onhashchange();
     this.setupTouchEvents();
     this.onresize();
+  }
+  
+  Dz.setupParams = function() {
+    var p = window.location.search.substr(1).split('&');
+    p.forEach(function(e, i, a) {
+      var keyVal = e.split('=');
+      Dz.params[keyVal[0]] = decodeURIComponent(keyVal[1]);
+    });
   }
 
   Dz.onkeydown = function(aEvent) {
