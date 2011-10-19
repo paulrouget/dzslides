@@ -13,7 +13,7 @@
     <svg width="15px" height="15px" viewBox="0 0 50 50"><path d="M46.686,2.632L23.694,25.624l22.992,22.993H27.183L4.189,25.624 L27.183,2.632H46.686z"/></svg>
   </button>
   <p id="rightcontrols">
-    <input onchange="Dz.setSlide(this.value)" size="2" id="slideidx" value="0" />/<span id="slidecount">...</span>
+    <input onchange="Dz.setCursor(this.value)" size="2" id="slideidx" value="0" />/<span id="slidecount">...</span>
     <button title="Open in a new window" id="popup" onclick="Dz.popup()">
       <svg width="15px" height="15px" viewBox="0 0 50 50"><path d="M10,0L10,40L50,40L50,0z M0,5L5,5L5,45L45,45L45,50L0,50Z"/></svg>
     </button>
@@ -119,6 +119,14 @@
       aEvent.preventDefault();
       this.forward();
     }
+    if (aEvent.keyCode == 35) { // end
+      aEvent.preventDefault();
+      this.goEnd();
+    }
+    if (aEvent.keyCode == 36) { // home
+      aEvent.preventDefault();
+      this.goStart();
+    }
     if (aEvent.keyCode == 32) { // space
       aEvent.preventDefault();
       this.toggleContent();
@@ -127,18 +135,19 @@
   
   Dz.onmessage = function(aEvent) {
     if (aEvent.source === this.view) {
-      var args = JSON.parse(aEvent.data);
-      if (args.method === "newslide") {
-        this.idx = ~~args.idx;
+      var argv = aEvent.data.split(" "), argc = argv.length;
+      argv.forEach(function(e, i, a) { a[i] = decodeURIComponent(e) });
+      if (argv[0] === "CURSOR" && argc === 2) {
+        var cursor = argv[1].split(".");
+        this.idx = ~~cursor[0];
+        this.step = ~~cursor[1];
         $("#slideidx").value = this.idx;
         $("#back").disabled = this.idx == 1;
         $("#forward").disabled = this.idx == this.count;
       }
-      if (args.method === "registered") {
-        this.count = args.count;
-        $("#slidecount").innerHTML = this.count;
-        $("#title").innerHTML = args.title;
-        document.title = args.title;
+      if (argv[0] === "REGISTERED" && argc === 3) {
+        $("#slidecount").innerHTML = argv[2];
+        document.title = $("#title").innerHTML = argv[1];
       }
     }
   }
@@ -166,12 +175,12 @@
     iframe.src = this.url = this.getUrl();
     iframe.onload = function() {
       Dz.view = this.contentWindow;
-      Dz.view.postMessage("register", "*");
+      Dz.postMsg(Dz.view, "REGISTER");
     }
   }
   
   Dz.toggleContent = function() {
-    this.view.postMessage("toggleContent", "*");
+    this.postMsg(this.view, "TOGGLE_CONTENT");
   }
   
   Dz.onhashchange = function() {
@@ -179,19 +188,34 @@
   }
   
   Dz.back = function() {
-    this.view.postMessage("back", "*");
+    this.postMsg(this.view, "BACK");
   }
 
   Dz.forward = function() {
-    this.view.postMessage("forward", "*");
+    this.postMsg(this.view, "FORWARD");
   }
 
-  Dz.setSlide = function(aIdx) {
-    this.view.postMessage("setSlide(" + aIdx + ")", "*");
+  Dz.goStart = function() {
+    this.postMsg(this.view, "START");
+  }
+
+  Dz.goEnd = function() {
+    this.postMsg(this.view, "END");
+  }
+
+  Dz.setCursor = function(aCursor) {
+    this.postMsg(this.view, "SET_CURSOR", aCursor);
   }
 
   Dz.popup = function() {
     window.open(this.url + "#" + this.idx, '', 'width=800,height=600,personalbar=0,toolbar=0,scrollbars=1,resizable=1');
+  }
+  
+  Dz.postMsg = function(aWin, aMsg) { // [arg0, [arg1...]]
+    aMsg = [aMsg];
+    for (var i = 2; i < arguments.length; i++)
+      aMsg.push(encodeURIComponent(arguments[i]));
+    aWin.postMessage(aMsg.join(" "), "*");
   }
   
   window.onload = Dz.init.bind(Dz);

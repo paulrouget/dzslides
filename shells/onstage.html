@@ -11,7 +11,7 @@
   <iframe></iframe>
 </div>
 
-<div id="slideidx" onclick="Dz.setSlide(prompt('Go to slide...','1'));">?</div>
+<div id="slideidx" onclick="Dz.setCursor(prompt('Go to slide...','1'));">?</div>
 <div id="nextslideidx">?</div>
 
 <div id="notes">
@@ -187,6 +187,14 @@
       aEvent.preventDefault();
       this.forward();
     }
+    if (aEvent.keyCode == 35) { // end
+      aEvent.preventDefault();
+      this.goEnd();
+    }
+    if (aEvent.keyCode == 36) { // home
+      aEvent.preventDefault();
+      this.goStart();
+    }
     if (aEvent.keyCode == 32) { // space
       aEvent.preventDefault();
       this.toggleContent();
@@ -195,19 +203,24 @@
   
   Dz.onmessage = function(aEvent) {
     if (aEvent.source === this.views.present) {
-      var args = JSON.parse(aEvent.data);
-      if (args.method === "newslide") {
-        this.idx = ~~args.idx;
-        $("#notes > #content").innerHTML = this.notes = args.details
+      var argv = aEvent.data.split(" "), argc = argv.length;
+      argv.forEach(function(e, i, a) { a[i] = decodeURIComponent(e) });
+      if (argv[0] === "CURSOR" && argc === 2) {
+        var cursor = argv[1].split(".");
+        if (this.idx != ~~cursor[0])
+          this.postMsg(this.views.present, "GET_NOTES");
+        this.idx = ~~cursor[0];
+        this.step = ~~cursor[1];
         $("#slideidx").innerHTML = this.idx;
         $("#nextslideidx").innerHTML = this.idx + 1;
-        this.views.future.postMessage("setSlide(" + (this.idx + 1) + ")", "*");
+        this.postMsg(this.views.future, "SET_CURSOR", this.idx + "." + (this.step + 1));
         if (this.views.remote)
-          this.views.remote.postMessage("setSlide(" + this.idx + ")", "*");
+          this.postMsg(this.views.remote, "SET_CURSOR", argv[1]);
       }
-      if (args.method === "registered") {
-        $("#slidecount").innerHTML = args.count;
-      }
+      if (argv[0] === "NOTES" && argc === 2)
+        $("#notes > #content").innerHTML = this.notes = argv[1];
+      if (argv[0] === "REGISTERED" && argc === 3)
+        $("#slidecount").innerHTML = argv[2];
     }
   }
   
@@ -237,14 +250,14 @@
       var id = this.parentNode.id;
       Dz.views[id] = this.contentWindow;
       if (id == 'present' && Dz.views.present)
-        Dz.views.present.postMessage("register", "*");
+        Dz.postMsg(Dz.views.present, "REGISTER");
     }
   }
   
   Dz.toggleContent = function() {
-    this.views.present.postMessage("toggleContent", "*");
+    this.postMsg(this.views.present, "TOGGLE_CONTENT");
     if (this.views.remote)
-      this.views.remote.postMessage("toggleContent", "*");
+      this.postMsg(this.views.remote, "TOGGLE_CONTENT");
   }
   
   Dz.onhashchange = function() {
@@ -252,19 +265,34 @@
   }
   
   Dz.back = function() {
-    this.views.present.postMessage("back", "*");
+    this.postMsg(this.views.present, "BACK");
   }
 
   Dz.forward = function() {
-    this.views.present.postMessage("forward", "*");
+    this.postMsg(this.views.present, "FORWARD");
   }
 
-  Dz.setSlide = function(aIdx) {
-    this.views.present.postMessage("setSlide(" + aIdx + ")", "*");
+  Dz.goStart = function() {
+    this.postMsg(this.views.present, "START");
+  }
+
+  Dz.goEnd = function() {
+    this.postMsg(this.views.present, "END");
+  }
+
+  Dz.setCursor = function(aCursor) {
+    this.postMsg(this.views.present, "SET_CURSOR", aCursor);
   }
 
   Dz.popup = function() {
     this.views.remote = window.open(this.url + "#" + this.idx, 'slides', 'width=800,height=600,personalbar=0,toolbar=0,scrollbars=1,resizable=1');
+  }
+  
+  Dz.postMsg = function(aWin, aMsg) { // [arg0, [arg1...]]
+    aMsg = [aMsg];
+    for (var i = 2; i < arguments.length; i++)
+      aMsg.push(encodeURIComponent(arguments[i]));
+    aWin.postMessage(aMsg.join(" "), "*");
   }
   
   Dz.startClock = function() {

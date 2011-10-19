@@ -278,30 +278,31 @@
   }
 
   Dz.onmessage = function(aEvent) {
-    var msg = aEvent.data;
+    var argv = aEvent.data.split(" "), argc = argv.length;
+    argv.forEach(function(e, i, a) { a[i] = decodeURIComponent(e) });
     var win = aEvent.source;
-    if (msg === "register") {
+    if (argv[0] === "REGISTER" && argc === 1) {
       this.remoteWindows.push(win);
-      win.postMessage(JSON.stringify({
-        method: "registered",
-        title: document.title,
-        count: this.slides.length
-      }), "*");
-      win.postMessage(JSON.stringify({
-        method: "newslide",
-        details: this.getDetails(this.idx),
-        idx: this.idx
-      }), "*");
+      this.postMsg(win, "REGISTERED", document.title, this.slides.length);
+      this.postMsg(win, "CURSOR", this.idx + "." + this.step);
       return;
     }
-    if (msg === "back") this.back();
-    if (msg === "forward") this.forward();
-    if (msg === "toggleContent") this.toggleContent();
-    // setSlide(42)
-    var r = /setSlide\((\d+)\)/.exec(msg);
-    if (r) {
-        this.setCursor(r[1], 0);
-    }
+    if (argv[0] === "BACK" && argc === 1)
+      this.back();
+    if (argv[0] === "FORWARD" && argc === 1)
+      this.forward();
+    if (argv[0] === "START" && argc === 1)
+      this.goStart();
+    if (argv[0] === "END" && argc === 1)
+      this.goEnd();
+    if (argv[0] === "TOGGLE_CONTENT" && argc === 1)
+      this.toggleContent();
+    if (argv[0] === "SET_CURSOR" && argc === 2)
+      window.location.hash = "#" + argv[1];
+    if (argv[0] === "GET_CURSOR" && argc === 1)
+      this.postMsg(win, "CURSOR", this.idx + "." + this.step);
+    if (argv[0] === "GET_NOTES" && argc === 1)
+      this.postMsg(win, "NOTES", this.getDetails(this.idx));
   }
 
   Dz.toggleContent = function() {
@@ -323,7 +324,7 @@
   Dz.setCursor = function(aIdx, aStep) {
     // If the user change the slide number in the URL bar, jump
     // to this slide.
-    aStep = (aStep != 0 && typeof aStep !== "undefined") ? "." + aStep : "";
+    aStep = (aStep != 0 && typeof aStep !== "undefined") ? "." + aStep : ".0";
     window.location.hash = "#" + aIdx + aStep;
   }
 
@@ -334,12 +335,19 @@
     if (cursor.length == 2) {
       newidx = ~~cursor[1].split(".")[0];
       newstep = ~~cursor[1].split(".")[1];
+      if (newstep > Dz.slides[newidx - 1].$$('.incremental > *').length) {
+        newstep = 0;
+        newidx++;
+      }
     }
     if (newidx != this.idx) {
       this.setSlide(newidx);
     }
     if (newstep != this.step) {
       this.setIncremental(newstep);
+    }
+    for (var i = 0; i < this.remoteWindows.length; i++) {
+      this.postMsg(this.remoteWindows[i], "CURSOR", this.idx + "." + this.step);
     }
   }
 
@@ -399,13 +407,6 @@
       this.idx = -1;
       // console.warn("Slide doesn't exist.");
     }
-    for (var i = 0; i < this.remoteWindows.length; i++) {
-      this.remoteWindows[i].postMessage(JSON.stringify({
-        method: "newslide",
-        details: this.getDetails(this.idx),
-        idx: this.idx
-      }), "*");
-    }
   }
 
   Dz.setIncremental = function(aStep) {
@@ -439,6 +440,13 @@
       setCursor(this.idx, 0);
     }
     return next;
+  }
+  
+  Dz.postMsg = function(aWin, aMsg) { // [arg0, [arg1...]]
+    aMsg = [aMsg];
+    for (var i = 2; i < arguments.length; i++)
+      aMsg.push(encodeURIComponent(arguments[i]));
+    aWin.postMessage(aMsg.join(" "), "*");
   }
 
   window.onload = Dz.init.bind(Dz);
