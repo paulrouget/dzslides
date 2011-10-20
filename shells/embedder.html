@@ -6,17 +6,11 @@
 <h1 id="title">...</h1>
 <iframe></iframe>
 <div id="controls">
-  <button title="prev" id="back" onclick="Dz.back()">
-    <svg width="15px" height="15px" viewBox="0 0 50 50"><path d="M46.686,2.632L23.694,25.624l22.992,22.993H27.183L4.189,25.624 L27.183,2.632H46.686z"/></svg>
-  </button>
-  <button title="next" id="forward" onclick="Dz.forward()">
-    <svg width="15px" height="15px" viewBox="0 0 50 50"><path d="M46.686,2.632L23.694,25.624l22.992,22.993H27.183L4.189,25.624 L27.183,2.632H46.686z"/></svg>
-  </button>
+  <button title="prev" id="back" onclick="Dz.back()">&#9664;</button>
+  <button title="next" id="forward" onclick="Dz.forward()">&#9654;</button>
   <p id="rightcontrols">
     <input onchange="Dz.setCursor(this.value)" size="2" id="slideidx" value="0" />/<span id="slidecount">...</span>
-    <button title="Open in a new window" id="popup" onclick="Dz.popup()">
-      <svg width="15px" height="15px" viewBox="0 0 50 50"><path d="M10,0L10,40L50,40L50,0z M0,5L5,5L5,45L45,45L45,50L0,50Z"/></svg>
-    </button>
+    <button title="Open in a new window" id="popup" onclick="Dz.popup()">&#8689;</button>
   </p>
 </div>
 
@@ -63,13 +57,28 @@
     font-size: 12px;
     text-align: center;
   }
-  #controls path { fill: white; }
-  #controls button[disabled] path {fill: #333;}
-  #forward {-moz-transform: scaleX(-1);-webkit-transform: scaleX(-1);-o-transform: scaleX(-1);-ms-transform: scaleX(-1);transform: scaleX(-1);}
+  #controls button[disabled] {color: #333;}
   button {
     background-color: transparent;
     border: none;
     cursor: pointer;
+    color: #bbb;
+    padding: 0;
+    font-size: 20px;
+    line-height: 100%;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    position: relative;
+  }
+  button:hover {
+    color: white;
+  }
+  button:active {
+    top: 1px;
+    left: 1px;
   }
   #slideidx {
     border: none;
@@ -83,6 +92,7 @@
     top: -5px;
     right: 10px;
   }
+  #popup {-moz-transform: scaleX(-1);-webkit-transform: scaleX(-1);-o-transform: scaleX(-1);-ms-transform: scaleX(-1);transform: scaleX(-1);}
 </style>
 
 <script>
