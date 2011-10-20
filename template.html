@@ -43,7 +43,7 @@
 
 <section>
     <h3>A video</h3>
-    <video src="http://videos-cdn.mozilla.net/brand/Mozilla_Firefox_Manifesto_v0.2_640.webm"></video>
+    <video src="http://videos-cdn.mozilla.net/brand/Mozilla_Firefox_Manifesto_v0.2_640.webm" poster="http://www.mozilla.org/images/about/poster.jpg"></video>
 </section>
 
 <section>
@@ -177,15 +177,27 @@
     remoteWindows: [],
     idx: -1,
     step: 0,
-    slides: null
+    slides: null,
+    params: {
+      autoplay: "1"
+    }
   };
 
   Dz.init = function() {
     document.body.className = "loaded";
     this.slides = $$("body > section");
+    this.setupParams();
     this.onhashchange();
     this.setupTouchEvents();
     this.onresize();
+  }
+  
+  Dz.setupParams = function() {
+    var p = window.location.search.substr(1).split('&');
+    p.forEach(function(e, i, a) {
+      var keyVal = e.split('=');
+      Dz.params[keyVal[0]] = decodeURIComponent(keyVal[1]);
+    });
   }
 
   Dz.onkeydown = function(aEvent) {
@@ -399,7 +411,7 @@
     if (next) {
       next.setAttribute("aria-selected", "true");
       var video = next.$("video");
-      if (video) {
+      if (video && !!+this.params.autoplay) {
         video.play();
       }
     } else {
