@@ -202,25 +202,30 @@
   }
   
   Dz.onmessage = function(aEvent) {
+    var argv = aEvent.data.split(" "), argc = argv.length;
+    argv.forEach(function(e, i, a) { a[i] = decodeURIComponent(e) });
     if (aEvent.source === this.views.present) {
-      var argv = aEvent.data.split(" "), argc = argv.length;
-      argv.forEach(function(e, i, a) { a[i] = decodeURIComponent(e) });
       if (argv[0] === "CURSOR" && argc === 2) {
-        var cursor = argv[1].split(".");
-        if (this.idx != ~~cursor[0])
-          this.postMsg(this.views.present, "GET_NOTES");
-        this.idx = ~~cursor[0];
-        this.step = ~~cursor[1];
-        $("#slideidx").innerHTML = this.idx;
-        $("#nextslideidx").innerHTML = this.idx + 1;
-        this.postMsg(this.views.future, "SET_CURSOR", this.idx + "." + (this.step + 1));
-        if (this.views.remote)
-          this.postMsg(this.views.remote, "SET_CURSOR", argv[1]);
+        if (aEvent.source === this.views.present) {
+          var cursor = argv[1].split(".");
+          if (this.idx != ~~cursor[0])
+            this.postMsg(this.views.present, "GET_NOTES");
+          this.idx = ~~cursor[0];
+          this.step = ~~cursor[1];
+          $("#slideidx").innerHTML = argv[1];
+          this.postMsg(this.views.future, "SET_CURSOR", this.idx + "." + (this.step + 1));
+          if (this.views.remote)
+            this.postMsg(this.views.remote, "SET_CURSOR", argv[1]);
+        } else {
+          $("#nextslideidx").innerHTML = argv[1];
+        }
       }
-      if (argv[0] === "NOTES" && argc === 2)
-        $("#notes > #content").innerHTML = this.notes = argv[1];
-      if (argv[0] === "REGISTERED" && argc === 3)
-        $("#slidecount").innerHTML = argv[2];
+      if (argv[0] === "CURSOR" && argc === 2) {
+        if (argv[0] === "NOTES" && argc === 2)
+          $("#notes > #content").innerHTML = this.notes = argv[1];
+        if (argv[0] === "REGISTERED" && argc === 3)
+          $("#slidecount").innerHTML = argv[2];
+      }
     }
   }
   
@@ -250,11 +255,13 @@
     present.onload = future.onload = function() {
       var id = this.parentNode.id;
       Dz.views[id] = this.contentWindow;
-      if (Dz.views.present && Dz.views.future)
+      if (Dz.views.present && Dz.views.future) {
         Dz.postMsg(Dz.views.present, "REGISTER");
+        Dz.postMsg(Dz.views.future, "REGISTER");
+      }
     }
   }
-  
+
   Dz.toggleContent = function() {
     if (this.views.remote)
       this.postMsg(this.views.remote, "TOGGLE_CONTENT");
