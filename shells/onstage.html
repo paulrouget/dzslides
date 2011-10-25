@@ -250,7 +250,7 @@
     present.onload = future.onload = function() {
       var id = this.parentNode.id;
       Dz.views[id] = this.contentWindow;
-      if (id == 'present' && Dz.views.present)
+      if (Dz.views.present && Dz.views.future)
         Dz.postMsg(Dz.views.present, "REGISTER");
     }
   }
