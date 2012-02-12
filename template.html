@@ -193,7 +193,7 @@
     -o-transform: none !important;
     -ms-transform: none !important;
   }
-  .view head, .view head > title { display: block; }
+  .view head, .view head > title { display: block }
   section {
     position: absolute;
     pointer-events: none;
@@ -202,7 +202,7 @@
   .view section {
     pointer-events: auto;
     position: static;
-    width: 800px; height: 800px;
+    width: 800px; height: 600px;
     margin: -150px -200px;
     float: left;
 
@@ -240,7 +240,7 @@
     this.onresize();
     this.setupView();
   }
-  
+
   Dz.setupParams = function() {
     var p = window.location.search.substr(1).split('&');
     p.forEach(function(e, i, a) {
@@ -325,10 +325,10 @@
     var sections = $$("section");
     var eclick   = function(j) {
       return function() {
-        if("" == html.className)
+        if(!html.classList.contains("view"))
           return;
 
-        html.className = "";
+        html.classList.remove("view");
         Dz.setCursor(j + 1);
       }
     }
@@ -528,7 +528,7 @@
     }
     return next;
   }
-  
+
   Dz.postMsg = function(aWin, aMsg) { // [arg0, [arg1...]]
     aMsg = [aMsg];
     for (var i = 2; i < arguments.length; i++)
