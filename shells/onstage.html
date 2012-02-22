@@ -309,11 +309,15 @@
       $("#seconds").innerHTML = addZero(now.getSeconds());
     }, 1000);
   }
-  
-  window.onload = Dz.init.bind(Dz);
-  window.onkeydown = Dz.onkeydown.bind(Dz);
-  window.onhashchange = Dz.loadIframes.bind(Dz);
-  window.onmessage = Dz.onmessage.bind(Dz);
+
+  function init() {
+    Dz.init();
+    window.onkeydown = Dz.onkeydown.bind(Dz);
+    window.onhashchange = Dz.loadIframes.bind(Dz);
+    window.onmessage = Dz.onmessage.bind(Dz);
+  }
+
+  window.onload = init;
 </script>
 
 
