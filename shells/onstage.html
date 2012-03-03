@@ -351,11 +351,4 @@
     return this.querySelectorAll(aQuery);
   }).bind(document);
 
-  NodeList.prototype.forEach = function(fun) {
-    if (typeof fun !== "function") throw new TypeError();
-    for (var i = 0; i < this.length; i++) {
-      fun.call(this, this[i]);
-    }
-  }
-
 </script>
