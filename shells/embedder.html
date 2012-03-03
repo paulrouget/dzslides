@@ -4,14 +4,16 @@
 <title>...</title>
 
 <h1 id="title">...</h1>
-<iframe></iframe>
+<div id="slides">
+  <iframe></iframe>
+</div>
 <div id="controls">
   <button title="prev" id="back" onclick="Dz.back()">&#9664;</button>
   <button title="next" id="forward" onclick="Dz.forward()">&#9654;</button>
-  <p id="rightcontrols">
+  <div id="rightcontrols">
     <input onchange="Dz.setCursor(this.value)" size="2" id="slideidx" value="0" />/<span id="slidecount">...</span>
     <button title="Open in a new window" id="popup" onclick="Dz.popup()">&#8689;</button>
-  </p>
+  </div>
 </div>
 
 <style>
@@ -20,41 +22,45 @@
     margin: 0;
     background-color: black;
     height: 100%;
-    display: -moz-box;
+/*    display: -moz-box;
     display: -webkit-box;
     display: box;
     -moz-box-orient: vertical;
-    -webkit-box-orient: vertical;
-    box-orient: vertical;
+    -webkit-box-orient: vertical;*/
+/*    box-orient: vertical;*/
     width: 100%;
   }
-  iframe {
-    -moz-box-flex : 1;
-    -webkit-box-flex : 1;
-    box-flex : 1;
-    background-color: white;
-    border: none;
-    width: 100%;
-    display: block;
-    /* For IE: */
-    height: 80%;
+  #title, #slides, #controls {
+    left: 0;
+    position: absolute;
+    right: 0;
   }
-
   #title {
-    font-weight: normal;
-    font-family: monospace;
-    margin: 0px;
     font-size: 19px;
-    text-align: left;
+    font-weight: normal;
+    margin: 0px;
   }
   #title, #controls {
     color: white;
+    font-family: monospace;
+    height: 30px;
+    line-height: 30px;
     padding: 5px;
-    position: relative;
+  }
+  #slides {
+    bottom: 40px;
+    top: 40px;
+  }
+  iframe {
+    border: none;
+    background-color: white;
+    height: 100%;
+    width: 100%;
   }
   #controls {
-    font-family: monospace;
-    font-size: 12px;
+    bottom: 0;
+    float: right;
+    font-size: 13px;
     text-align: center;
   }
   #controls button[disabled] {color: #333;}
@@ -88,8 +94,9 @@
   }
   #rightcontrols * { vertical-align: middle; }
   #rightcontrols {
+    bottom: 4px;
     position: absolute;
-    top: -5px;
+    top: 4px;
     right: 10px;
   }
   #popup {-moz-transform: scaleX(-1);-webkit-transform: scaleX(-1);-o-transform: scaleX(-1);-ms-transform: scaleX(-1);transform: scaleX(-1);}
