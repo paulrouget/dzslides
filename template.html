@@ -234,6 +234,10 @@
       aEvent.preventDefault();
       this.toggleContent();
     }
+    if (aEvent.keyCode == 70) { // f
+      aEvent.preventDefault();
+      this.goFullscreen();
+    }
   }
 
   /* Touch Events */
@@ -452,6 +456,14 @@
       setCursor(this.idx, 0);
     }
     return next;
+  }
+
+  Dz.goFullscreen = function() {
+    var html = $('html'),
+        requestFullscreen = html.requestFullscreen || html.requestFullScreen || html.mozRequestFullScreen || html.webkitRequestFullScreen;
+    if (requestFullscreen) {
+      requestFullscreen.apply(html);
+    }
   }
   
   Dz.postMsg = function(aWin, aMsg) { // [arg0, [arg1...]]
