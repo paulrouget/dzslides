@@ -5,14 +5,14 @@
 
 <h1 id="title">...</h1>
 <div id="slides">
-  <iframe></iframe>
+  <iframe allowfullscreen mozallowfullscreen webkitallowfullscreen></iframe>
 </div>
 <div id="controls">
   <button title="prev" id="back" onclick="Dz.back()">&#9664;</button>
   <button title="next" id="forward" onclick="Dz.forward()">&#9654;</button>
   <div id="rightcontrols">
     <input onchange="Dz.setCursor(this.value)" size="2" id="slideidx" value="0" />/<span id="slidecount">...</span>
-    <button title="Open in a new window" id="popup" onclick="Dz.popup()">&#8689;</button>
+    <button title="Go fullscreen or open in a new window" id="fullscreen" onclick="Dz.goFullscreen()">&#8689;</button>
   </div>
 </div>
 
@@ -99,7 +99,7 @@
     top: 4px;
     right: 10px;
   }
-  #popup {-moz-transform: scaleX(-1);-webkit-transform: scaleX(-1);-o-transform: scaleX(-1);-ms-transform: scaleX(-1);transform: scaleX(-1);}
+  #fullscreen {-moz-transform: scaleX(-1);-webkit-transform: scaleX(-1);-o-transform: scaleX(-1);-ms-transform: scaleX(-1);transform: scaleX(-1);}
 </style>
 
 <script>
@@ -107,7 +107,8 @@
     view: null,
     url: null,
     idx: 1,
-    count: null
+    count: null,
+    iframe: null
   };
   
   Dz.init = function() {
@@ -147,6 +148,10 @@
     if (aEvent.keyCode == 32) { // space
       aEvent.preventDefault();
       this.toggleContent();
+    }
+    if (aEvent.keyCode == 70) { // f
+      aEvent.preventDefault();
+      this.goFullscreen();
     }
   }
   
@@ -188,9 +193,9 @@
   }
   
   Dz.loadIframe = function() {
-    var iframe = $("iframe");
-    iframe.src = this.url = this.getUrl();
-    iframe.onload = function() {
+    this.iframe = $("iframe");
+    this.iframe.src = this.url = this.getUrl();
+    this.iframe.onload = function() {
       Dz.view = this.contentWindow;
       Dz.postMsg(Dz.view, "REGISTER");
     }
@@ -224,8 +229,13 @@
     this.postMsg(this.view, "SET_CURSOR", aCursor);
   }
 
-  Dz.popup = function() {
-    window.open(this.url + "#" + this.idx, '', 'width=800,height=600,personalbar=0,toolbar=0,scrollbars=1,resizable=1');
+  Dz.goFullscreen = function() {
+    var requestFullscreen = this.iframe.requestFullscreen || this.iframe.requestFullScreen || this.iframe.mozRequestFullScreen || this.iframe.webkitRequestFullScreen;
+    if (requestFullscreen) {
+      requestFullscreen.apply(this.iframe);
+    } else {
+      window.open(this.url + "#" + this.idx, '', 'width=800,height=600,personalbar=0,toolbar=0,scrollbars=1,resizable=1');
+    }
   }
   
   Dz.postMsg = function(aWin, aMsg) { // [arg0, [arg1...]]
