@@ -429,7 +429,7 @@
     }
     var incrementals = this.slides[this.idx - 1].$$('.incremental');
     if (this.step <= 0) {
-      incrementals.forEach(function(aNode) {
+      $$.forEach(incrementals, function(aNode) {
         aNode.removeAttribute('active');
       });
       return;
@@ -439,7 +439,7 @@
       next.setAttribute('aria-selected', true);
       next.parentNode.setAttribute('active', true);
       var found = false;
-      incrementals.forEach(function(aNode) {
+      $$.forEach(incrementals, function(aNode) {
         if (aNode != next.parentNode)
           if (found)
             aNode.removeAttribute('active');
@@ -503,11 +503,8 @@
     return this.querySelectorAll(aQuery);
   }).bind(document);
 
-  NodeList.prototype.forEach = function(fun) {
-    if (typeof fun !== "function") throw new TypeError();
-    for (var i = 0; i < this.length; i++) {
-      fun.call(this, this[i]);
-    }
+  $$.forEach = function(nodeList, fun) {
+    Array.prototype.forEach.call(nodeList, fun);
   }
 
 </script>
