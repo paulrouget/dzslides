@@ -238,11 +238,15 @@
       aMsg.push(encodeURIComponent(arguments[i]));
     aWin.postMessage(aMsg.join(" "), "*");
   }
-  
-  window.onload = Dz.init.bind(Dz);
-  window.onkeydown = Dz.onkeydown.bind(Dz);
-  window.onhashchange = Dz.loadIframe.bind(Dz);
-  window.onmessage = Dz.onmessage.bind(Dz);
+
+  function init() {
+    Dz.init();
+    window.onkeydown = Dz.onkeydown.bind(Dz);
+    window.onhashchange = Dz.loadIframe.bind(Dz);
+    window.onmessage = Dz.onmessage.bind(Dz);
+  }
+
+  window.onload = init;
 </script>
 
 
