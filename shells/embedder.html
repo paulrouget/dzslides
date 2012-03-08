@@ -3,7 +3,6 @@
 <meta charset="utf8">
 <title>...</title>
 
-<h1 id="title">...</h1>
 <div id="slides">
   <iframe allowfullscreen mozallowfullscreen webkitallowfullscreen></iframe>
 </div>
@@ -24,17 +23,12 @@
     height: 100%;
     width: 100%;
   }
-  #title, #slides, #controls {
+  #slides, #controls {
     left: 0;
     position: absolute;
     right: 0;
   }
-  #title {
-    font-size: 19px;
-    font-weight: normal;
-    margin: 0px;
-  }
-  #title, #controls {
+  #controls {
     color: white;
     font-family: monospace;
     height: 30px;
@@ -43,7 +37,7 @@
   }
   #slides {
     bottom: 40px;
-    top: 40px;
+    top: 0;
   }
   iframe {
     border: none;
@@ -163,7 +157,7 @@
       }
       if (argv[0] === "REGISTERED" && argc === 3) {
         $("#slidecount").innerHTML = this.count = argv[2];
-        document.title = $("#title").innerHTML = argv[1];
+        document.title = argv[1];
       }
     }
   }
