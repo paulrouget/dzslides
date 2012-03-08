@@ -135,14 +135,11 @@
   /* The items to-be-selected */
   .incremental > *[aria-selected] ~ * { opacity: 0.2; }
 
-  #progress-bar, #progress-value { height: 2px; }
-  #progress-bar { bottom: 0; position: absolute; width: 100%; }
-  #progress-value { 
-    background: #AAA; 
-    -moz-transition: width 400ms linear 0s;
-    -webkit-transition: width 400ms linear 0s;
-    -ms-transition: width 400ms linear 0s;
-    transition: width 400ms linear 0s;
+  /* The progressbar, at the bottom of the slides, show the global
+     progress of the presentation. */
+  #progress-bar {
+    height: 2px;
+    background: #AAA;
   }
 </style>
 
@@ -160,7 +157,7 @@
 #
 -->
 
-<div id="progress-bar"><div id="progress-value"></div></div>
+<div id="progress-bar"></div>
 
 <!-- Default Style -->
 <style>
@@ -183,6 +180,14 @@
   body.loaded { display: block; }
   .incremental {visibility: hidden; }
   .incremental[active] {visibility: visible; }
+  #progress-bar{
+    bottom: 0;
+    position: absolute;
+    -moz-transition: width 400ms linear 0s;
+    -webkit-transition: width 400ms linear 0s;
+    -ms-transition: width 400ms linear 0s;
+    transition: width 400ms linear 0s;
+  }
 </style>
 
 <script>
@@ -191,7 +196,7 @@
     idx: -1,
     step: 0,
     slides: null,
-    progressValue : null,
+    progressBar : null,
     params: {
       autoplay: "1"
     }
@@ -200,7 +205,7 @@
   Dz.init = function() {
     document.body.className = "loaded";
     this.slides = $$("body > section");
-    this.progressValue = $("#progress-value");
+    this.progressBar = $("#progress-bar");
     this.setupParams();
     this.onhashchange();
     this.setupTouchEvents();
@@ -489,7 +494,7 @@
     var steps = slide.$$('.incremental > *').length + 1,
         slideSize = 100 / (this.slides.length - 1),
         stepSize = slideSize / steps;
-    this.progressValue.style.width = ((aIdx - 1) * slideSize + aStep * stepSize) + '%';
+    this.progressBar.style.width = ((aIdx - 1) * slideSize + aStep * stepSize) + '%';
   }
   
   Dz.postMsg = function(aWin, aMsg) { // [arg0, [arg1...]]
