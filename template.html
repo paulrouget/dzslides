@@ -13,7 +13,8 @@
 </section>
 
 <section>
-    <h2>Part one</h2>
+    <p>Some random text: But I've never been to the moon! You can see how I lived before I met you. Also Zoidberg.
+    I could if you hadn't turned on the light and shut off my stereo.</p>
 </section>
 
 <section>
@@ -28,8 +29,7 @@
 
 <section>
   <q>
-    Soothe us with sweet lies. Is that a cooking show? No! I want to
-    live! There are still too many things I don't own!
+    Who's brave enough to fly into something we all keep calling a death sphere?
   </q>
 </section>
 
@@ -60,12 +60,12 @@
 
 <style>
   html { background-color: black; }
-  body { background-color: white; }
+  body { background-color: white; border-radius: 12px}
   /* A section is a slide. It's size is 800x600, and this will never change */
   section {
       /* The font from Google */
       font-family: 'Oswald', arial, serif;
-      font-size: 40px;
+      font-size: 30px;
   }
   h1, h2 {
     margin-top: 200px;
@@ -80,8 +80,13 @@
       margin: 50px 200px;
   }
 
+  p {
+    margin: 75px;
+    font-size: 50px;
+  }
+
   q {
-    display: inline-block;
+    display: block;
     width: 100%;
     height: 100%;
     background-color: black;
@@ -101,8 +106,12 @@
 
   footer {
     position: absolute;
-    bottom: 10px;
-    right: 20px;
+    bottom: 0;
+    width: 100%;
+    padding: 40px;
+    text-align: right;
+    background-color: #F3F4F8;
+    border-top: 1px solid #CCC;
   }
 
   /* Transition effect */
@@ -130,10 +139,10 @@
   .incremental > * { opacity: 1; }
 
   /* The current item */
-  .incremental > *[aria-selected] { color: red; opacity: 1; }
+  .incremental > *[aria-selected] { opacity: 1; }
 
   /* The items to-be-selected */
-  .incremental > *[aria-selected] ~ * { opacity: 0.2; }
+  .incremental > *[aria-selected] ~ * { opacity: 0; }
 
   /* The progressbar, at the bottom of the slides, show the global
      progress of the presentation. */
