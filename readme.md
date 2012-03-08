@@ -31,7 +31,7 @@ When you press the `left` and `right` keys, you go forward and go back in your s
 But the slides can also respond to external messages. Messages can be sent through [postMessage](https://developer.mozilla.org/en/DOM/window.postMessage).
 So another web page can control the slides.
 
-### Procotol
+### Protocol
 
 A `cursor` is a string of this form: `3.5`. The first number represent the current slide index. The second number represent the current sub-item index.
 
@@ -67,3 +67,16 @@ Parameters a DZSlides page can have:
 
 * `autoplay` (integer, values : `0`/`1`, default : `1`) sets whether multimedia contents (audio, video) should be played automatically.
 
+## License
+
+                DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+                        Version 2, December 2004
+
+    Everyone is permitted to copy and distribute verbatim or modified
+    copies of this license document, and changing it is allowed as long
+    as the name is changed.
+
+                DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+      TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+
+    0. You just DO WHAT THE FUCK YOU WANT TO.
