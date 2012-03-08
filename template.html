@@ -461,7 +461,7 @@
     if (old) {
       old.removeAttribute('aria-selected');
     }
-    var incrementals = this.slides[this.idx - 1].$$('.incremental');
+    var incrementals = $$('.incremental');
     if (this.step <= 0) {
       $$.forEach(incrementals, function(aNode) {
         aNode.removeAttribute('active');
