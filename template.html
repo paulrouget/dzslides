@@ -38,14 +38,18 @@
 </section>
 
 <section>
-    <h3>An image</h3>
-    <img src="http://placekitten.com/g/800/600">
+    <figure> <!-- Figures are used to display images and videos fullpage -->
+      <img src="http://placekitten.com/g/800/600">
+      <figcaption>An image</figcaption>
+    </figure>
     <details>Kittens are so cute!</details>
 </section>
 
 <section>
-    <h3>A video</h3>
-    <video src="http://videos-cdn.mozilla.net/brand/Mozilla_Firefox_Manifesto_v0.2_640.webm" poster="http://www.mozilla.org/images/about/poster.jpg"></video>
+    <figure> <!-- Videos are automatically played -->
+      <video src="http://videos-cdn.mozilla.net/brand/Mozilla_Firefox_Manifesto_v0.2_640.webm" poster="http://www.mozilla.org/images/about/poster.jpg"></video>
+      <figcaption>A video</figcaption>
+    </figure>
 </section>
 
 <section>
@@ -95,13 +99,14 @@
     padding: 50px;
   }
 
-  img, video {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
+  /* Figures are displayed full-page, with the caption
+     on top of the image/video */
+  figure {
     background-color: black;
-    z-index: -1;
+  }
+  figcaption {
+    margin: 70px;
+    font-size: 50px;
   }
 
   footer {
@@ -196,6 +201,16 @@
     -webkit-transition: width 400ms linear 0s;
     -ms-transition: width 400ms linear 0s;
     transition: width 400ms linear 0s;
+  }
+  figure {
+    width: 100%;
+    height: 100%;
+  }
+  figure > * {
+    position: absolute;
+  }
+  figure > img, figure > video {
+    width: 100%; height: 100%;
   }
 </style>
 
