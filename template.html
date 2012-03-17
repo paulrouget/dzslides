@@ -182,6 +182,7 @@
     margin-left: -400px; margin-top: -300px;
     position: absolute; top: 50%; left: 50%;
     overflow: hidden;
+   counter-reset: slideidx;
   }
   section {
     position: absolute;
@@ -189,6 +190,21 @@
     width: 100%; height: 100%;
   }
   section[aria-selected] { pointer-events: auto; }
+
+  section:before {
+    /* Slide numbering by setting |visible| here. */
+    visibility: hidden /* visible */;
+    background: rgba(255, 255, 255, .7);
+    bottom: 5px;
+    counter-increment: slideidx;
+    content: counter(slideidx);
+    left: 5px;
+    position: absolute;
+    border-radius: 5px;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 2px 5px;
+  }
   html { overflow: hidden; }
   body { display: none; }
   body.loaded { display: block; }
