@@ -129,9 +129,10 @@
     transition: left 400ms linear 0s;
   }
   .view section {
-    transition: none;
     -moz-transition: none;
     -webkit-transition: none;
+    -ms-transition: none;
+    transition: none;
   }
 
   .view section[aria-selected] {
@@ -283,9 +284,9 @@
       aEvent.preventDefault();
       this.toggleContent();
     }
-    if (aEvent.keyCode == 27) { // esc
+    if (aEvent.keyCode == 79) { // “o”
       aEvent.preventDefault();
-      this.goView();
+      this.toggleView();
     }
   }
 
@@ -321,13 +322,12 @@
   }
 
   Dz.setupView = function() {
-    var html     = $("html");
+    var html = $("html");
     var sections = $$("section");
-    var eclick   = function(j) {
+    var eclick = function(j) {
       return function() {
         if(!html.classList.contains("view"))
           return;
-
         html.classList.remove("view");
         Dz.setCursor(j + 1);
       }
@@ -467,9 +467,12 @@
     this.setCursor(lastIdx, lastStep);
   }
 
-  Dz.goView = function() {
-    $("html").className = "view";
-    $("section[aria-selected]").scrollIntoView(true);
+  Dz.toggleView = function() {
+    var html = $("html");
+    if (!html.classList.contains("view")) {
+      $("section[aria-selected]").scrollIntoView(true);
+    }
+    $("html").classList.toggle("view");
   }
 
   Dz.setSlide = function(aIdx) {
