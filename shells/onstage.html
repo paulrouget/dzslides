@@ -205,8 +205,7 @@
     if (argv[0] === "CURSOR" && argc === 2) {
       if (aEvent.source === this.views.present) {
         var cursor = argv[1].split(".");
-        if (this.idx != ~~cursor[0])
-          this.postMsg(this.views.present, "GET_NOTES");
+        this.postMsg(this.views.present, "GET_NOTES");
         this.idx = ~~cursor[0];
         this.step = ~~cursor[1];
         $("#slideidx").innerHTML = argv[1];
