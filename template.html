@@ -8,30 +8,46 @@
 
 <section>
     <!-- This is the first slide -->
-    <h1>Foobar.</h1>
+    <h1>My Presentation</h1>
     <footer>by John Doe</footer>
 </section>
 
 <section>
-    <h2>Foo?</h2>
+    <h2>Part one</h2>
 </section>
 
 <section>
-    <h3>Incremental ?</h3>
+    <h3>An incremental list</h3>
     <ul class="incremental">
-      <li>Yes
-      <li>of
-      <li>course
+      <li>Item 1
+      <li>Item 2
+      <li>Item 3
     </ul>
 </section>
 
 <section>
-    <h3>No, bar!</h3>
-    <ul>
-        <li>Text
-        <li>Images
-        <li>Videos
-    </ul>
+  <q>
+    Soothe us with sweet lies. Is that a cooking show? No! I want to
+    live! There are still too many things I don't own!
+  </q>
+</section>
+
+<section>
+    <h2>Part two</h2>
+</section>
+
+<section>
+    <h3>An image</h3>
+    <img src="http://placekitten.com/g/800/600">
+</section>
+
+<section>
+    <h3>A video</h3>
+    <video src="http://videos-cdn.mozilla.net/brand/Mozilla_Firefox_Manifesto_v0.2_640.webm"></video>
+</section>
+
+<section>
+    <h2>End!</h2>
 </section>
 
 <!-- Your Style -->
@@ -47,17 +63,45 @@
   section {
       /* The font from Google */
       font-family: 'Oswald', arial, serif;
-      font-size: 2em;
+      font-size: 40px;
   }
-  h1, h2, h3 {
-      margin-top: 50px;
-      text-align: center;
+  h1, h2 {
+    margin-top: 200px;
+    text-align: center;
+    font-size: 80px;
   }
+  h3 {
+    margin: 100px 0 50px 100px;
+  }
+
   ul {
-      margin-left: 200px;
+      margin: 50px 200px;
   }
-  a { color: #FF0066; } a:hover { text-decoration: underline; }
-  footer { position: absolute; bottom: 50px; right: 50px; }
+
+  q {
+    display: inline-block;
+    width: 800px;
+    height: 600px;
+    background-color: black;
+    color: white;
+    font-size: 60px;
+    padding: 50px;
+  }
+
+  img, video {
+    width: 800px;
+    height: 600px;
+    position: absolute;
+    top: 0;
+    background-color: black;
+    z-index: -1;
+  }
+
+  footer {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+  }
 
   /* Transition effect */
   /* Feel free to change the transition effect for original
@@ -82,12 +126,8 @@
 
   /* By default, visible */
   .incremental > * { opacity: 1; }
-
-  /* The current item */
-  .incremental > *[aria-selected] { color: red; opacity: 1; }
-
-  /* The items to-be-selected */
-  .incremental > *[aria-selected] ~ * { opacity: 0.2; }
+  .incremental > *[aria-selected] { font-size: 150%; opacity: 1; }
+  .incremental > *[aria-selected] ~ * { opacity: 0.1; }
 
 </style>
 
