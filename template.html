@@ -563,9 +563,12 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
   Dz.toggleView = function() {
-    if (!this.html.classList.contains("view")) {
+    this.html.classList.toggle("view");
+
+    if (this.html.classList.contains("view")) {
       $("section[aria-selected]").scrollIntoView(true);
     }
+<<<<<<< HEAD
     this.html.classList.toggle("view");
 =======
   Dz.goView = function() {
@@ -588,6 +591,8 @@
 >>>>>>> 359bf59... Use event delegation and update performance.
 =======
 >>>>>>> 5048930... Fix scrollIntoView when toggle view mode.
+=======
+>>>>>>> 5048930c322a5151c0bf27a7b8c24e562bb2d15a
   }
 
   Dz.setSlide = function(aIdx) {
