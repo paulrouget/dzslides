@@ -217,6 +217,7 @@
     -o-transform: scale(.4);
     -ms-transform: scale(.4);
   }
+  .view section > * { pointer-events: none; }
   section[aria-selected] { pointer-events: auto; }
   html { overflow: hidden; }
   html.view { overflow: visible; }
@@ -230,6 +231,7 @@
     remoteWindows: [],
     idx: -1,
     step: 0,
+    html: null,
     slides: null,
     params: {
       autoplay: "1"
@@ -238,7 +240,8 @@
 
   Dz.init = function() {
     document.body.className = "loaded";
-    this.slides = $$("body > section");
+    this.slides = Array.prototype.slice.call($$("body > section"));
+    this.html = document.body.parentNode;
     this.setupParams();
     this.onhashchange();
     this.setupTouchEvents();
@@ -326,19 +329,13 @@
   }
 
   Dz.setupView = function() {
-    var html = $("html");
-    var sections = $$("section");
-    var eclick = function(j) {
-      return function() {
-        if(!html.classList.contains("view"))
-          return;
-        html.classList.remove("view");
-        Dz.setCursor(j + 1);
-      }
-    }
+    document.body.addEventListener("click", function ( e ) {
+      if (!Dz.html.classList.contains("view")) return;
+      if (!e.target || e.target.nodeName != "SECTION") return;
 
-    for(var i = 0; i < sections.length; ++i)
-      sections[i].addEventListener("click", eclick(i), false);
+      Dz.html.classList.remove("view");
+      Dz.setCursor(Dz.slides.indexOf(e.target) + 1);
+    }, false);
   }
 
   /* Adapt the size of the slides to the window */
@@ -472,11 +469,10 @@
   }
 
   Dz.toggleView = function() {
-    var html = $("html");
-    if (!html.classList.contains("view")) {
+    if (!this.html.classList.contains("view")) {
       $("section[aria-selected]").scrollIntoView(true);
     }
-    $("html").classList.toggle("view");
+    this.html.classList.toggle("view");
   }
 
   Dz.setSlide = function(aIdx) {
