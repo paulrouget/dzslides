@@ -469,10 +469,11 @@
   }
 
   Dz.toggleView = function() {
-    if (!this.html.classList.contains("view")) {
+    this.html.classList.toggle("view");
+
+    if (this.html.classList.contains("view")) {
       $("section[aria-selected]").scrollIntoView(true);
     }
-    this.html.classList.toggle("view");
   }
 
   Dz.setSlide = function(aIdx) {
