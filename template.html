@@ -28,9 +28,9 @@
 </section>
 
 <section>
-  <q>
+  <blockquote>
     Who's brave enough to fly into something we all keep calling a death sphere?
-  </q>
+  </blockquote>
 </section>
 
 <section>
@@ -89,14 +89,18 @@
     font-size: 50px;
   }
 
-  q {
-    display: block;
-    width: 100%;
+  blockquote {
     height: 100%;
     background-color: black;
     color: white;
     font-size: 60px;
     padding: 50px;
+  }
+  blockquote:before {
+    content: open-quote;
+  }
+  blockquote:after {
+    content: close-quote;
   }
 
   /* Figures are displayed full-page, with the caption
