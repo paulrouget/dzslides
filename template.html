@@ -72,6 +72,13 @@
       font-size: 30px;
   }
 
+  .view section:after {
+    counter-increment: slideidx;
+    content: counter(slideidx, decimal-leading-zero);
+    position: absolute; bottom: -80px; right: 100px;
+    color: white;
+  }
+
   section:before {
     /* Enable the slides numbering by uncommenting below */
     /* visibility: visible; */
