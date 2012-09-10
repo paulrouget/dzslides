@@ -1,0 +1,203 @@
+1
+00:00:01,095 --> 00:00:05,000
+Nous sommes plutôt fiers d’être un navigateur à part.
+
+2
+00:00:05,001 --> 00:00:07,061
+Nous n’avons pas de titres ronflants
+
+3
+00:00:07,061 --> 00:00:09,059
+quand nous sommes cités dans la presse.
+
+4
+00:00:09,059 --> 00:00:11,039
+Nous n’avons pas de marge bénéficiaire.
+
+5
+00:00:11,067 --> 00:00:14,039
+Nous n’avons ni icône ni gourou à vénérer à plat ventre.
+
+6
+00:00:14,060 --> 00:00:16,010
+Nous ne passons pas les mêmes accords,
+
+7
+00:00:16,010 --> 00:00:17,048
+ne signons pas les mêmes contrats,
+
+8
+00:00:17,048 --> 00:00:18,082
+ni ne serrons les mêmes mains,
+
+9
+00:00:18,082 --> 00:00:20,034
+que tout le monde.
+
+10
+00:00:20,089 --> 00:00:22,096
+Et cela ne nous dérange pas.
+
+11
+00:00:23,066 --> 00:00:25,054
+Nous sommes une communauté d’esprits indépendants,
+
+12
+00:00:25,054 --> 00:00:27,028
+de gens farouchement anticonformistes
+
+13
+00:00:27,028 --> 00:00:29,037
+qui font les choses un peu différemment.
+
+14
+00:00:29,065 --> 00:00:32,031
+Là où d’autres sociétés pourraient donner de l’importance aux résultats,
+
+15
+00:00:32,039 --> 00:00:35,002
+nous donnons de la valeur… à nos valeurs.
+
+16
+00:00:35,059 --> 00:00:38,091
+Lorsqu’un concurrent songe à rendre quelque chose propriétaire,
+
+17
+00:00:38,091 --> 00:00:40,083
+nous nous efforçons de le libérer.
+
+18
+00:00:41,017 --> 00:00:43,031
+Et quand de nombreux produits et technologies
+
+19
+00:00:43,031 --> 00:00:45,021
+sont développés derrière des portes closes,
+
+20
+00:00:45,021 --> 00:00:46,079
+les nôtres sont cultivés au grand jour,
+
+21
+00:00:46,079 --> 00:00:48,074
+là où chacun peut les voir.
+
+22
+00:00:48,083 --> 00:00:52,018
+Nous n’avons de comptes à rendre à aucun actionnaire.
+
+23
+00:00:52,031 --> 00:00:54,011
+Nous ne rendons des comptes qu’à vous.
+
+24
+00:00:54,050 --> 00:00:56,046
+Et nous ne fonctionnons pas ainsi pour le plaisir,
+
+25
+00:00:56,046 --> 00:00:58,082
+même si l’on s’amuse énormément.
+
+26
+00:00:58,092 --> 00:01:00,034
+Nous fonctionnons ainsi
+
+27
+00:01:00,034 --> 00:01:03,057
+parce que nous pensons que c’est la bonne chose à faire.
+
+28
+00:01:03,057 --> 00:01:05,050
+Nous croyons que les principes sont plus importants que le profit.
+
+29
+00:01:05,051 --> 00:01:08,065
+Nous croyons que l’honnêteté l’emporte sur le secret,
+
+30
+00:01:08,076 --> 00:01:11,050
+et que la communauté prévaut sur les intérêts de l’entreprise.
+
+31
+00:01:11,067 --> 00:01:13,089
+Nous croyons qu’il faut prendre soin du web
+
+32
+00:01:13,089 --> 00:01:15,017
+et non s’en emparer,
+
+33
+00:01:15,031 --> 00:01:17,006
+que c’est une ressource que nous devons protéger
+
+34
+00:01:17,006 --> 00:01:19,048
+plutôt qu’un simple bien qui peut être vendu.
+
+35
+00:01:19,048 --> 00:01:21,013
+Et nous croyons fermement à l’innovation
+
+36
+00:01:21,013 --> 00:01:25,009
+qui met l’utilisateur à l’avant, au centre et fermement aux commandes.
+
+37
+00:01:25,046 --> 00:01:26,093
+Mais surtout
+
+38
+00:01:26,093 --> 00:01:28,090
+nous croyons en vous.
+
+39
+00:01:29,008 --> 00:01:31,082
+Nous croyons que le meilleur navigateur du monde est rendu possible
+
+40
+00:01:31,082 --> 00:01:33,045
+par des ingénieurs, des programmeurs,
+
+41
+00:01:33,045 --> 00:01:36,020
+des designers, et des gens comme vous,
+
+42
+00:01:36,020 --> 00:01:39,058
+qui donnent de leur temps, leur talent, leur énergie et leur appui à la cause.
+
+43
+00:01:39,058 --> 00:01:41,058
+Et nous croyons qu’ensemble,
+
+44
+00:01:41,058 --> 00:01:43,011
+en gardant cette cause en tête,
+
+45
+00:01:43,011 --> 00:01:46,025
+nous pouvons innover au bénéfice de l’individu,
+
+46
+00:01:46,025 --> 00:01:47,065
+et à l’amélioration du web.
+
+47
+00:01:47,065 --> 00:01:49,065
+Afin que toujours et à jamais
+
+48
+00:01:49,065 --> 00:01:51,049
+il serve le bien commun.
+
+49
+00:01:51,049 --> 00:01:53,098
+Nous sommes tous Mozilla Firefox.
+
+50
+00:01:54,026 --> 00:01:56,032
+Nous ne sommes pas qu’une sorte différente de navigateur.
+
+51
+00:01:56,058 --> 00:01:59,015
+Nous sommes un navigateur qui fait la différence.
