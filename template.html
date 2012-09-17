@@ -24,7 +24,7 @@
       <li>Item 2
       <li>Item 3
     </ul>
-    <details>Some notes. They are only visible using onstage shell.</details>
+    <div role="note">s>Some notes. They are only visible using onstage shell.</div role="note">
 </section>
 
 <section>
@@ -42,7 +42,7 @@
       <img src="http://placekitten.com/g/800/600">
       <figcaption>An image</figcaption>
     </figure>
-    <details>Kittens are so cute!</details>
+    <div role="note">Kittens are so cute!</div role="note">
 </section>
 
 <section>
@@ -212,7 +212,7 @@
 <!-- Default Style -->
 <style>
   * { margin: 0; padding: 0; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
-  details { display: none; }
+  [role="note"] { display: none; }
   body {
     width: 800px; height: 600px;
     margin-left: -400px; margin-top: -300px;
@@ -409,9 +409,9 @@
   }
 
 
-  Dz.getDetails = function(aIdx) {
+  Dz.getNotes = function(aIdx) {
     var s = $("section:nth-of-type(" + aIdx + ")");
-    var d = s.$("details");
+    var d = s.$("[role='note'");
     return d ? d.innerHTML : "";
   }
 
@@ -440,7 +440,7 @@
     if (argv[0] === "GET_CURSOR" && argc === 1)
       this.postMsg(win, "CURSOR", this.idx + "." + this.step);
     if (argv[0] === "GET_NOTES" && argc === 1)
-      this.postMsg(win, "NOTES", this.getDetails(this.idx));
+      this.postMsg(win, "NOTES", this.getNotes(this.idx));
   }
 
   Dz.toggleContent = function() {
