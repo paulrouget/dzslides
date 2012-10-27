@@ -6,18 +6,18 @@
 <!-- Your Slides -->
 <!-- One section is one slide -->
 
-<section>
+<section role='slide'>
     <!-- This is the first slide -->
     <h1>My Presentation</h1>
     <footer>by John Doe</footer>
 </section>
 
-<section>
+<section role='slide'>
     <p>Some random text: But I've never been to the moon! You can see how I lived before I met you. Also Zoidberg.
     I could if you hadn't turned on the light and shut off my stereo.</p>
 </section>
 
-<section>
+<section role='slide'>
     <h3>An incremental list</h3>
     <ul class="incremental">
       <li>Item 1
@@ -27,7 +27,7 @@
     <div role="note">Some notes. They are only visible using onstage shell.</div>
 </section>
 
-<section>
+<section role='slide'>
   <blockquote>
     Who's brave enough to fly into something we all keep calling a death sphere?
   </blockquote>
@@ -38,11 +38,11 @@
   </details>
 </section>
 
-<section>
+<section role='slide'>
     <h2>Part two</h2>
 </section>
 
-<section>
+<section role='slide'>
     <figure> <!-- Figures are used to display images and videos fullpage -->
       <img src="http://placekitten.com/g/800/600">
       <figcaption>An image</figcaption>
@@ -50,14 +50,14 @@
     <div role="note">Kittens are so cute!</div>
 </section>
 
-<section>
+<section role='slide'>
     <figure> <!-- Videos are automatically played -->
       <video src="http://videos-cdn.mozilla.net/brand/Mozilla_Firefox_Manifesto_v0.2_640.webm" poster="http://www.mozilla.org/images/about/poster.jpg"></video>
       <figcaption>A video</figcaption>
     </figure>
 </section>
 
-<section>
+<section role='slide'>
     <h2>End!</h2>
 </section>
 
@@ -68,79 +68,91 @@
 <link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'>
 
 <style>
-  html, .view body { background-color: black; counter-reset: slideidx; }
-  body, .view section { background-color: white; border-radius: 12px }
+  html, .view body { 
+    background-color: black; 
+    counter-reset: slideidx; 
+  }
+
+  body, 
+  .view section[role='slide']  { 
+    background-color: white; 
+    border-radius: 12px;
+  }
+
   /* A section is a slide. It's size is 800x600, and this will never change */
-  section, .view head > title {
+  section[role='slide'], 
+  .view section[role='slide'] head > title {
       /* The font from Google */
       font-family: 'Oswald', arial, serif;
       font-size: 30px;
   }
 
-  .view section:after {
+  .view section[role='slide']:after {
     counter-increment: slideidx;
     content: counter(slideidx, decimal-leading-zero);
     position: absolute; bottom: -80px; right: 100px;
     color: white;
   }
 
-  .view head > title {
+  .view section[role='slide'] head > title {
     color: white;
     text-align: center;
     margin: 1em 0 1em 0;
   }
 
-  h1, h2 {
+  section[role='slide'] h1,
+  section[role='slide'] h2 {
     margin-top: 200px;
     text-align: center;
     font-size: 80px;
   }
-  h3 {
+  section[role='slide'] h3 {
     margin: 100px 0 50px 100px;
   }
 
-  ul {
+  section[role='slide'] ul {
       margin: 50px 200px;
   }
 
-  p {
+  section[role='slide'] p {
     margin: 75px;
     font-size: 50px;
   }
 
-  blockquote {
+  section[role='slide'] blockquote {
     height: 100%;
     background-color: black;
     color: white;
     font-size: 60px;
     padding: 50px;
   }
-  blockquote:before {
+  section[role='slide'] blockquote:before {
     content: open-quote;
   }
-  blockquote:after {
+  section[role='slide'] blockquote:after {
     content: close-quote;
   }
 
   /* Figures are displayed full-page, with the caption
      on top of the image/video */
-  figure {
+  section[role='slide'] figure {
     background-color: black;
     width: 100%;
     height: 100%;
   }
-  figure > * {
+  section[role='slide'] figure > * {
     position: absolute;
   }
-  figure > img, figure > video {
+  section[role='slide'] figure > img, 
+  section[role='slide'] figure > video {
     width: 100%; height: 100%;
   }
-  figcaption {
+  section[role='slide'] figcaption {
     margin: 70px;
     font-size: 50px;
   }
 
-  footer {
+  section[role='slide'] footer {
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -151,35 +163,34 @@
   }
 </style>
 
-  /* Transition effect */
-  /* Feel free to change the transition effect for original
-     animations. See here:
-     https://developer.mozilla.org/en/CSS/CSS_transitions
-     How to use CSS3 Transitions: */
+  <!-- Transition effect -->
+  <!-- Feel free to change the transition effect for original animations. 
+        See here: https://developer.mozilla.org/en/CSS/CSS_transitions
+        How to use CSS3 Transitions: -->
 <style>
-  section {
+  section[role='slide'] {
     -moz-transition: left 400ms linear 0s;
     -webkit-transition: left 400ms linear 0s;
     -ms-transition: left 400ms linear 0s;
     transition: left 400ms linear 0s;
   }
-  .view section {
+  .view section[role='slide'] {
     -moz-transition: none;
     -webkit-transition: none;
     -ms-transition: none;
     transition: none;
   }
 
-  .view section[aria-selected] {
+  .view section[role='slide'][aria-selected] {
     border: 5px red solid;
   }
 
   /* Before */
-  section { left: -150%; }
+  section[role='slide'] { left: -150%; }
   /* Now */
-  section[aria-selected] { left: 0; }
+  section[role='slide'][aria-selected] { left: 0; }
   /* After */
-  section[aria-selected] ~ section { left: +150%; }
+  section[role='slide'][aria-selected] ~ section { left: +150%; }
 
   /* Incremental elements */
 
@@ -240,13 +251,16 @@
     -o-transform: none !important;
     -ms-transform: none !important;
   }
-  .view head, .view head > title { display: block }
-  section {
+  .view head, 
+  .view head > title { 
+    display: block 
+  }
+  section[role='slide'] {
     position: absolute;
     pointer-events: none;
     width: 100%; height: 100%;
   }
-  .view section {
+  .view section[role='slide'] {
     pointer-events: auto;
     position: static;
     width: 800px; height: 600px;
@@ -259,8 +273,8 @@
     -o-transform: scale(.4);
     -ms-transform: scale(.4);
   }
-  .view section > * { pointer-events: none; }
-  section[aria-selected] { pointer-events: auto; }
+  .view section[role='slide'] > * { pointer-events: none; }
+  section[role='slide'][aria-selected] { pointer-events: auto; }
   html { overflow: hidden; }
   html.view { overflow: visible; }
   body.loaded { display: block; }
