@@ -23,6 +23,10 @@
       <li>Item 1
       <li>Item 2
       <li>Item 3
+        <ul class="incremental">
+          <li> Item 3.1
+          <li> Item 3.2
+        </ul>
     </ul>
     <div role="note">Some notes. They are only visible using onstage shell.</div>
 </section>
@@ -101,6 +105,9 @@
 
   ul {
       margin: 50px 200px;
+  }
+  li > ul {
+      margin: 15px 50px;
   }
 
   p {
