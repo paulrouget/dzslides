@@ -329,7 +329,8 @@
       return;
     }
     // Don't intercept whether an input has the focus
-    if ( $(':focus') instanceof HTMLInputElement
+    var focus = $(':focus');
+    if ((focus.nodeName === 'INPUT' || focus.nodeName === 'TEXTAREA')
       && aEvent.keyCode != 13) {
       return;
     }
