@@ -3,6 +3,13 @@
 <meta charset="utf-8">
 <title>The Title Of Your Presentation</title>
 
+<!-- Optional: on every page: header and footer -->
+<header>
+  Hi, I'm a header
+</header>
+
+<footer>by John Doe</footer>
+
 <!-- Your Slides -->
 <!-- One section is one slide -->
 
@@ -173,14 +180,18 @@
     font-size: 50px;
   }
 
+  header {
+    background-color: #F3F4F8;
+    border-bottom: 1px solid #CCC;
+  }
+
   footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    padding: 40px;
-    text-align: right;
     background-color: #F3F4F8;
     border-top: 1px solid #CCC;
+  }
+
+  section footer {
+    padding: 40px;
   }
 
   /* Transition effect */
@@ -296,6 +307,20 @@
   .view #progress-bar {
     display: none;
   }
+  header {
+    text-align: right;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+  footer {
+    text-align: right;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
+  .view header { display: none; }
+  .view footer { display: none; }
 </style>
 
 <script>
