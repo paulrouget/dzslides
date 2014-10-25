@@ -531,7 +531,8 @@
         this.step >= this.slides[this.idx - 1].$$('.next').length) {
         return;
     }
-    if (this.step >= this.slides[this.idx - 1].$$('.next').length) {
+    if (this.html.classList.contains("view") ||
+        this.step >= this.slides[this.idx - 1].$$('.next').length) {
       this.setCursor(this.idx + 1,
                      this.slides[this.idx].$$('.next[active]').length);
     } else {
@@ -572,10 +573,11 @@
       next.setAttribute("aria-selected", "true");
       if (this.html.classList.contains("view")) {
         next.scrollIntoView();
-      }
-      var video = next.$("video");
-      if (video && !!+this.params.autoplay) {
-        video.play();
+      } else {
+        var video = next.$("video");
+        if (video && !!+this.params.autoplay) {
+          video.play();
+        }
       }
     } else {
       // That should not happen
