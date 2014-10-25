@@ -358,7 +358,9 @@
       aEvent.preventDefault();
       this.goFullscreen();
     }
-    if (aEvent.keyCode == 79) { // o
+    if (aEvent.keyCode == 79    //o
+     || aEvent.keyCode == 27
+    ) {
       aEvent.preventDefault();
       this.toggleView();
     }
