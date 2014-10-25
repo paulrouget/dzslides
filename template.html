@@ -32,6 +32,13 @@
 </section>
 
 <section>
+    <h3>More incrementals</h3>
+    <p class="next">Not only list elements can appear incrementally</p>
+    <p><mark class="next">Styles</mark> can be incremental
+       <mark class="next">too</mark></p>
+</section>
+
+<section>
   <blockquote>
     Who's brave enough to fly into something we all keep calling a death sphere?
   </blockquote>
@@ -108,6 +115,11 @@
   }
   li > ul {
       margin: 15px 50px;
+  }
+
+  mark.next:not([active]) {
+    visibility: visible; /* override the default behavior where next is hidden */
+    background-color: inherit; /* and disable highlighting instead */
   }
 
   p {
