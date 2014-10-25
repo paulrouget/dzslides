@@ -19,13 +19,13 @@
 
 <section>
     <h3>An incremental list</h3>
-    <ul class="incremental">
-      <li>Item 1
-      <li>Item 2
-      <li>Item 3
-        <ul class="incremental">
-          <li> Item 3.1
-          <li> Item 3.2
+    <ul>
+      <li class="next">Item 1
+      <li class="next">Item 2
+      <li class="next">Item 3
+        <ul>
+          <li class="next"> Item 3.1
+          <li class="next"> Item 3.2
         </ul>
     </ul>
     <div role="note">Some notes. They are only visible using onstage shell.</div>
@@ -186,17 +186,6 @@
   /* After */
   section[aria-selected] ~ section { left: +150%; }
 
-  /* Incremental elements */
-
-  /* By default, visible */
-  .incremental > * { opacity: 1; }
-
-  /* The current item */
-  .incremental > *[aria-selected] { opacity: 1; }
-
-  /* The items to-be-selected */
-  .incremental > *[aria-selected] ~ * { opacity: 0; }
-
   /* The progressbar, at the bottom of the slides, show the global
      progress of the presentation. */
   #progress-bar {
@@ -269,8 +258,7 @@
   html { overflow: hidden; }
   html.view { overflow: visible; }
   body.loaded { display: block; }
-  .incremental {visibility: hidden; }
-  .incremental[active] {visibility: visible; }
+  .next:not([active]) {visibility: hidden; }
   #progress-bar{
     bottom: 0;
     position: absolute;
@@ -487,7 +475,7 @@
     if (cursor.length == 2) {
       newidx = ~~cursor[1].split(".")[0];
       newstep = ~~cursor[1].split(".")[1];
-      if (newstep > Dz.slides[newidx - 1].$$('.incremental > *').length) {
+      if (newstep > Dz.slides[newidx - 1].$$('.next').length) {
         newstep = 0;
         newidx++;
       }
@@ -505,24 +493,21 @@
   }
 
   Dz.back = function() {
-    if (this.idx == 1 && this.step == 0) {
+    if (this.idx == 1) {
       return;
     }
-    if (this.step == 0) {
-      this.setCursor(this.idx - 1,
-                     this.slides[this.idx - 2].$$('.incremental > *').length);
-    } else {
-      this.setCursor(this.idx, this.step - 1);
-    }
+    this.setCursor(this.idx - 1,
+                   this.slides[this.idx - 2].$$('.next[active]').length);
   }
 
   Dz.forward = function() {
     if (this.idx >= this.slides.length &&
-        this.step >= this.slides[this.idx - 1].$$('.incremental > *').length) {
+        this.step >= this.slides[this.idx - 1].$$('.next').length) {
         return;
     }
-    if (this.step >= this.slides[this.idx - 1].$$('.incremental > *').length) {
-      this.setCursor(this.idx + 1, 0);
+    if (this.step >= this.slides[this.idx - 1].$$('.next').length) {
+      this.setCursor(this.idx + 1,
+                     this.slides[this.idx].$$('.next[active]').length);
     } else {
       this.setCursor(this.idx, this.step + 1);
     }
@@ -534,7 +519,7 @@
 
   Dz.goEnd = function() {
     var lastIdx = this.slides.length;
-    var lastStep = this.slides[lastIdx - 1].$$('.incremental > *').length;
+    var lastStep = this.slides[lastIdx - 1].$$('.next').length;
     this.setCursor(lastIdx, lastStep);
   }
 
@@ -575,31 +560,9 @@
 
   Dz.setIncremental = function(aStep) {
     this.step = aStep;
-    var old = this.slides[this.idx - 1].$('.incremental > *[aria-selected]');
-    if (old) {
-      old.removeAttribute('aria-selected');
-    }
-    var incrementals = $$('.incremental');
-    if (this.step <= 0) {
-      $$.forEach(incrementals, function(aNode) {
-        aNode.removeAttribute('active');
-      });
-      return;
-    }
-    var next = this.slides[this.idx - 1].$$('.incremental > *')[this.step - 1];
+    var next = this.slides[this.idx - 1].$$('.next')[this.step - 1];
     if (next) {
-      next.setAttribute('aria-selected', true);
-      next.parentNode.setAttribute('active', true);
-      var found = false;
-      $$.forEach(incrementals, function(aNode) {
-        if (aNode != next.parentNode)
-          if (found)
-            aNode.removeAttribute('active');
-          else
-            aNode.setAttribute('active', true);
-        else
-          found = true;
-      });
+      next.setAttribute('active', true);
     } else {
       setCursor(this.idx, 0);
     }
@@ -618,7 +581,7 @@
     var slide = $("section:nth-of-type("+ aIdx +")");
     if (!slide)
       return;
-    var steps = slide.$$('.incremental > *').length + 1,
+    var steps = slide.$$('.next').length + 1,
         slideSize = 100 / (this.slides.length - 1),
         stepSize = slideSize / steps;
     this.progressBar.style.width = ((aIdx - 1) * slideSize + aStep * stepSize) + '%';
