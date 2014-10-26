@@ -39,6 +39,20 @@
 </section>
 
 <section>
+    <h3>Even more incrementals</h3>
+    <p>
+      <span class="next" next-order="3">They</span>
+      <span class="next" next-order="5">can</span>
+      <span class="next" next-order="2">even</span>
+      <span class="next" next-order="1">appear</span>
+      <span class="next" next-order="7">in</span>
+      <span class="next" next-order="4">any</span>
+      <span class="next" next-order="6">order</span>
+      <span class="next" next-order="8">!</span>
+    </p>
+</section>
+
+<section>
   <blockquote>
     Who's brave enough to fly into something we all keep calling a death sphere?
   </blockquote>
@@ -572,7 +586,10 @@
 
   Dz.setIncremental = function(aStep) {
     this.step = aStep;
-    var next = this.slides[this.idx - 1].$$('.next')[this.step - 1];
+    var incrementals = Array.prototype.slice.call(this.slides[this.idx - 1].$$('.next')).sort(function(a, b) {
+            return Number(a.getAttribute('next-order')) - Number(b.getAttribute('next-order'));
+          });
+    var next = incrementals[this.step - 1];
     if (next) {
       next.setAttribute('active', true);
     } else {
