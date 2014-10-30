@@ -80,3 +80,8 @@ Parameters a DZSlides page can have:
       TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
 
     0. You just DO WHAT THE FUCK YOU WANT TO.
+
+## Todo ideas
+
+* Allow many elements to have the same `next-order` number — and activate them all at the same time.
+* 2D presentation structure as in flowtime.js or reveal.js. Many presentations fit naturally into it, even in this `template.html` slides could be arranged in a 2D grid (in the overview) where every Part starts a new row of slides.
