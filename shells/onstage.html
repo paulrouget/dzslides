@@ -21,7 +21,7 @@
 <div id="slidecount">?</div>
 <button id="popup-button" onclick="Dz.popup()">Pop-up</button>
 
-<div id="time">
+<div id="time" onclick="Dz.resetClock()">
   <span id="hours">00</span>:<span id="minutes">00</span>:<span id="seconds">00</span>
 </div>
 
@@ -82,6 +82,7 @@
     position: absolute;
     text-align: center;
     width: 200px;
+    cursor: pointer;
   }
 
   iframe {
@@ -160,6 +161,7 @@
   };
   
   Dz.init = function() {
+    this.clock_start = 0;
     this.startClock();
     this.loadIframes();
   }
@@ -298,13 +300,17 @@
     aWin.postMessage(aMsg.join(" "), "*");
   }
   
+  Dz.resetClock = function() { // + 3600000, because Date(0) is 01:00:00
+    this.clock_start = (new Date()).getTime() + 3600000;
+  }
+
   Dz.startClock = function() {
     var addZero = function(num) {
       return num < 10 ? '0' + num : num;
     }
     setInterval(function() {
-      var now = new Date();
-      $("#hours").innerHTML = addZero(now.getHours());
+      var now = new Date((new Date()).getTime() - this.Dz.clock_start);
+      $("#hours").innerHTML   = addZero(now.getHours());
       $("#minutes").innerHTML = addZero(now.getMinutes());
       $("#seconds").innerHTML = addZero(now.getSeconds());
     }, 1000);
