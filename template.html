@@ -71,7 +71,7 @@
 </section>
 
 <section>
-    <h2>Part two</h2>
+    <h1>Part two</h1>
 </section>
 
 <section>
@@ -90,7 +90,7 @@
 </section>
 
 <section>
-    <h2>End!</h2>
+    <h1>End!</h1>
 </section>
 
 <!-- Your Style -->
@@ -101,11 +101,12 @@
 
 <style>
   html, .view body { background-color: black; counter-reset: slideidx; }
-  body, .view section { background-color: white; border-radius: 12px }
-  /* A section is a slide. It's size is 800x600, and this will never change */
+  body, .view section {
+    background-color: white; border-radius: 12px;
+    font-family: 'Oswald', arial, serif;
+  }
+
   section, .view head > title {
-      /* The font from Google */
-      font-family: 'Oswald', arial, serif;
       font-size: 30px;
   }
 
@@ -122,20 +123,39 @@
     margin: 1em 0 1em 0;
   }
 
-  h1, h2 {
-    margin-top: 200px;
+  h1 {
+    margin: 120px 0 30px 0;
     text-align: center;
     font-size: 80px;
   }
-  h3 {
-    margin: 100px 0 50px 100px;
+
+  h2 {
+    text-align: center;
   }
 
-  ul {
-      margin: 50px 200px;
+  section > h3 {
+    margin: 50px 50px 40px 50px;
+    border-bottom: 0.1px solid;
   }
-  li > ul {
-      margin: 15px 50px;
+
+  pre {
+    overflow: hidden;
+    font-size: 20px;
+    margin: 0 75px 0 75px;
+    padding: 10px;
+    border: 1px solid;
+    font-weight: bold;
+    background-color: #F7F7F7;
+    width:80%
+  }
+
+  ul, ol {
+      margin: 40px 100px 0 100px;
+  }
+
+  li > ul, ol {
+      margin: 0 0 15px 50px;
+      list-style-image: none; /* in case parent list has some */
   }
 
   mark.next:not([active]) {
@@ -144,8 +164,14 @@
   }
 
   p {
-    margin: 75px;
+    margin: 75px 75px 0 75px;
     font-size: 50px;
+  }
+
+  table {
+    margin: auto;
+    font-size:40px;
+    text-align: center;
   }
 
   blockquote {
@@ -188,10 +214,11 @@
   footer {
     background-color: #F3F4F8;
     border-top: 1px solid #CCC;
+    padding-bottom: 4px; /* remember progress bar */
   }
 
   section footer {
-    padding: 40px;
+    padding: 10px;
   }
 
   /* Transition effect */
@@ -226,7 +253,7 @@
   /* The progressbar, at the bottom of the slides, show the global
      progress of the presentation. */
   #progress-bar {
-    height: 2px;
+    height: 4px;
     background: #AAA;
   }
 </style>
@@ -398,7 +425,7 @@
       this.goFullscreen();
     }
     if (aEvent.keyCode == 79    //o
-     || aEvent.keyCode == 27
+     || aEvent.keyCode == 27    //Esc
     ) {
       aEvent.preventDefault();
       this.toggleView();
