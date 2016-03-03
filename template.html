@@ -252,6 +252,13 @@
     height: 4px;
     background: #AAA;
   }
+
+  pre {
+      white-space: pre-wrap;
+      font-size: 20px;
+      text-indent: -1em;
+  }
+
 </style>
 
 <!-- {{{{ dzslides core
@@ -393,12 +400,25 @@
       var keyVal = e.split('=');
       Dz.params[keyVal[0]] = decodeURIComponent(keyVal[1]);
     });
-  // Specific params handling
-    if (!+this.params.autoplay)
-      $$.forEach($$("video"), function(v){ v.controls = true });
+    // Specific params handling
+    if (!!+this.params.autoplay)
+      $$.forEach($$("video"), function(v){ v.setAttribute('controls', '') });
   }
 
   Dz.onkeydown = function(aEvent) {
+    if (this.isFullScreen()) {
+        if ( aEvent.keyCode == 37) { // left arrow
+            aEvent.preventDefault();
+            this.skipVideo(-10);
+        } else if (aEvent.keyCode == 39) {
+            aEvent.preventDefault();
+            this.skipVideo(10);
+        } else if (aEvent.keyCode == 32) {
+            aEvent.preventDefault();
+            this.toggleContent();
+        }
+        return;
+    }
     // Don't intercept keyboard shortcuts
     if (aEvent.altKey
       || aEvent.ctrlKey
@@ -548,6 +568,19 @@
     }
   }
 
+  Dz.skipVideo = function(inc) {
+    var s = $("section[aria-selected]");
+    if (s) {
+      var video = s.$("video");
+      if (video) {
+        if (video.ended || video.paused) {
+        } else {
+            video.currentTime += inc;
+        }
+      }
+    }
+  }
+
   Dz.setCursor = function(aIdx, aStep) {
     // If the user change the slide number in the URL bar, jump
     // to this slide.
@@ -662,11 +695,29 @@
   }
 
   Dz.goFullscreen = function() {
-    var html = $('html'),
-        requestFullscreen = html.requestFullscreen || html.requestFullScreen || html.mozRequestFullScreen || html.webkitRequestFullScreen;
-    if (requestFullscreen) {
-      requestFullscreen.apply(html);
+    var s = $("section[aria-selected]");
+    var canvas;
+    if (s) {
+      canvas = s.$("video");
+      if (!canvas) {
+        canvas = s.$("img");
+        if (!canvas) {
+            canvas = $("html");
+        }
+      }
+    } else {
+      canvas = $("html");
     }
+    var requestFullscreen = canvas.requestFullscreen || canvas.requestFullScreen 
+            || canvas.mozRequestFullScreen || canvas.webkitRequestFullScreen;
+    if (requestFullscreen) {
+      requestFullscreen.apply(canvas);
+    }
+  }
+
+  Dz.isFullScreen = function() {
+    return !!(document.fullScreen || document.webkitIsFullScreen || document.mozFullScreen 
+            || document.msFullscreenElement || document.fullscreenElement);
   }
   
   Dz.setProgress = function(aIdx, aStep) {
