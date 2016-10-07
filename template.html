@@ -277,7 +277,6 @@
   }
   body {
     width: 800px; height: 600px;
-    margin-left: -400px; margin-top: -300px;
     position: absolute; top: 50%; left: 50%;
     overflow: hidden;
     display: none;
@@ -341,7 +340,7 @@
    **************************************
 
   html { font-size: 12px; }
-  body { height: 450px; margin-top: -225px; }
+  body { height: 450px; }
   .view section {
     height: 450px;
     margin: -140px -200px;
@@ -481,6 +480,8 @@
     var sy = db.clientHeight / window.innerHeight;
     var transform = "scale(" + (1/Math.max(sx, sy)) + ")";
     db.style.transform = transform;
+    db.style.marginTop = -db.clientHeight / 2 + "px";
+    db.style.marginLeft = -db.clientWidth / 2 + "px";
   }
 
 
