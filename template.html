@@ -227,15 +227,9 @@
      https://developer.mozilla.org/en/CSS/CSS_transitions
      How to use CSS3 Transitions: */
   section {
-    -moz-transition: left 400ms linear 0s;
-    -webkit-transition: left 400ms linear 0s;
-    -ms-transition: left 400ms linear 0s;
     transition: left 400ms linear 0s;
   }
   .view section {
-    -moz-transition: none;
-    -webkit-transition: none;
-    -ms-transition: none;
     transition: none;
   }
 
@@ -276,7 +270,7 @@
 
 <!-- Default Style -->
 <style>
-  * { margin: 0; padding: 0; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
   [role="note"] { display: none; }
   html {
     font-size: 16px;
@@ -296,10 +290,6 @@
     overflow: visible; overflow-x: hidden;
     /* undo Dz.onresize */
     transform: none !important;
-    -moz-transform: none !important;
-    -webkit-transform: none !important;
-    -o-transform: none !important;
-    -ms-transform: none !important;
   }
   .view head, .view head > title { display: block }
   section {
@@ -315,10 +305,6 @@
     float: left;
 
     transform: scale(.4);
-    -moz-transform: scale(.4);
-    -webkit-transform: scale(.4);
-    -o-transform: scale(.4);
-    -ms-transform: scale(.4);
   }
   .view section > * { pointer-events: none; }
   section[aria-selected] { pointer-events: auto; }
@@ -329,9 +315,6 @@
   #progress-bar{
     bottom: 0;
     position: absolute;
-    -moz-transition: width 400ms linear 0s;
-    -webkit-transition: width 400ms linear 0s;
-    -ms-transition: width 400ms linear 0s;
     transition: width 400ms linear 0s;
   }
   .view #progress-bar {
@@ -363,10 +346,6 @@
     height: 450px;
     margin: -140px -200px;
     transform: scale(.3);
-    -moz-transform: scale(.3);
-    -webkit-transform: scale(.3);
-    -o-transform: scale(.3);
-    -ms-transform: scale(.3);
   }
 */
 </style>
@@ -501,11 +480,6 @@
     var sx = db.clientWidth / window.innerWidth;
     var sy = db.clientHeight / window.innerHeight;
     var transform = "scale(" + (1/Math.max(sx, sy)) + ")";
-
-    db.style.MozTransform = transform;
-    db.style.WebkitTransform = transform;
-    db.style.OTransform = transform;
-    db.style.msTransform = transform;
     db.style.transform = transform;
   }
 
@@ -707,10 +681,8 @@
   }
 
   window.onload = init;
-</script>
 
-
-<script> // Helpers
+  // Helpers
   if (!Function.prototype.bind) {
     Function.prototype.bind = function (oThis) {
 
