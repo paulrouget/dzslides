@@ -12,7 +12,8 @@ the file in your browser.
 * Resolution independent (slides are scaled according to the size of the browser. The virtual dimension is 800x600);
 * Fullscreen presentation (HTML5 FullScreen API supported) - press `f` to go fullscreen;
 * Incremental content;
-* Mobile Friendly (supports touch events).
+* Mobile Friendly (supports touch events);
+* Printing to PDF
 
 ## Shells
 

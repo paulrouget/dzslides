@@ -237,12 +237,14 @@
     border: 5px red solid;
   }
 
+@media screen {
   /* Before */
   section { left: -150%; }
   /* Now */
   section[aria-selected] { left: 0; }
   /* After */
   section[aria-selected] ~ section { left: +150%; }
+}
 
   /* The progressbar, at the bottom of the slides, show the global
      progress of the presentation. */
@@ -333,6 +335,17 @@
   }
   .view header { display: none; }
   .view footer { display: none; }
+
+@media print {
+  section {
+    transition: none;
+    transform: none;
+    position: static;
+    page-break-inside: avoid;
+  }
+  body { overflow: visible; }
+  #progress-bar{ display:none; }
+}
 
 /*
    **************************************
