@@ -406,6 +406,12 @@
       || aEvent.shiftKey) {
       return;
     }
+    // Don't intercept whether an input has the focus
+    var focus = $(':focus');
+    if ((focus.nodeName === 'INPUT' || focus.nodeName === 'TEXTAREA')
+      && aEvent.keyCode != 13) {
+      return;
+    }
     if ( aEvent.keyCode == 37 // left arrow
       || aEvent.keyCode == 38 // up arrow
       || aEvent.keyCode == 33 // page up
