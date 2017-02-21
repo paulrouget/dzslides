@@ -22,6 +22,10 @@
     background-color: black;
     height: 100%;
     width: 100%;
+    overflow: hidden;
+  }
+  body:not(:hover) #controls {
+    bottom: -40px;
   }
   #slides, #controls {
     left: 0;
@@ -30,13 +34,14 @@
   }
   #controls {
     color: white;
+    background-color: black;
     font-family: monospace;
     height: 30px;
     line-height: 30px;
     padding: 5px;
   }
   #slides {
-    bottom: 40px;
+    bottom: 0;
     top: 0;
   }
   iframe {
@@ -50,6 +55,11 @@
     float: right;
     font-size: 13px;
     text-align: center;
+    -moz-transition: bottom 200ms;
+    -webkit-transition: bottom 200ms;
+    -o-transition: bottom 200ms;
+    -ms-transition: bottom 200ms;
+    transition: bottom 200ms;
   }
   #controls button[disabled] {color: #333;}
   button {
