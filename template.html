@@ -93,6 +93,10 @@
     <h1>End!</h1>
 </section>
 
+<section class=backup>
+    <h1>In case there are questions</h1>
+</section>
+
 <!-- Your Style -->
 <!-- Define the style of your presentation -->
 
@@ -369,6 +373,7 @@
     step: 0,
     html: null,
     slides: null,
+    backup: null,
     progressBar : null,
     params: {
       autoplay: "1"
@@ -378,6 +383,7 @@
   Dz.init = function() {
     document.body.className = "loaded";
     this.slides = Array.prototype.slice.call($$("body > section"));
+    this.backup = Array.prototype.slice.call($$("body > section.backup"));
     this.progressBar = $("#progress-bar");
     this.html = document.body.parentNode;
     this.setupParams();
@@ -606,7 +612,7 @@
   }
 
   Dz.goEnd = function() {
-    var lastIdx = this.slides.length;
+    var lastIdx = this.slides.length - this.backup.length;
     var lastStep = this.slides[lastIdx - 1].$$('.next').length;
     this.setCursor(lastIdx, lastStep);
   }
@@ -674,7 +680,7 @@
     if (!slide)
       return;
     var steps = slide.$$('.next').length + 1,
-        slideSize = 100 / (this.slides.length - 1),
+        slideSize = 100 / (this.slides.length - this.backup.length - 1),
         stepSize = slideSize / steps;
     this.progressBar.style.width = ((aIdx - 1) * slideSize + aStep * stepSize) + '%';
   }
