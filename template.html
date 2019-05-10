@@ -51,7 +51,8 @@
       <span class="next" next-order="3">They</span>
       <span class="next" next-order="5">can</span>
       <span class="next" next-order="2">even</span>
-      <span class="next" next-order="1">appear</span>
+      <span class="next" next-order="1" hide-after="7">appear</span>
+      <span class="next" next-order="8">disappear</span>
       <span class="next" next-order="7">in</span>
       <span class="next" next-order="4">any</span>
       <span class="next" next-order="6">order</span>
@@ -562,7 +563,7 @@
     if (cursor.length == 2) {
       newidx = ~~cursor[1].split(".")[0];
       newstep = ~~cursor[1].split(".")[1];
-      if (newstep > Dz.slides[newidx - 1].$$('.next').length) {
+      if (newstep > this.getTotalSlideSteps(Dz.slides[newidx - 1])) {
         newstep = 0;
         newidx++;
       }
@@ -583,19 +584,18 @@
     if (this.idx == 1) {
       return;
     }
-    this.setCursor(this.idx - 1,
-                   this.slides[this.idx - 2].$$('.next[active]').length);
+    this.setCursor(this.idx - 1, this.getTotalSlideSteps(this.slides[this.idx - 2]));
   }
 
   Dz.forward = function() {
     if (this.idx >= this.slides.length &&
-        this.step >= this.slides[this.idx - 1].$$('.next').length) {
+        this.step >= this.getTotalSlideSteps(this.slides[this.idx - 1])) {
         return;
     }
     if (this.html.classList.contains("view") ||
-        this.step >= this.slides[this.idx - 1].$$('.next').length) {
+        this.step >= this.getTotalSlideSteps(this.slides[this.idx - 1])) {
       this.setCursor(this.idx + 1,
-                     this.slides[this.idx].$$('.next[active]').length);
+                     this.getCurrentSlideStep(this.slides[this.idx]));
     } else {
       this.setCursor(this.idx, this.step + 1);
     }
@@ -607,7 +607,7 @@
 
   Dz.goEnd = function() {
     var lastIdx = this.slides.length;
-    var lastStep = this.slides[lastIdx - 1].$$('.next').length;
+    var lastStep = this.getTotalSlideSteps(this.slides[lastIdx - 1]);
     this.setCursor(lastIdx, lastStep);
   }
 
@@ -647,18 +647,61 @@
     }
   }
 
+  Dz.getTotalSlideSteps = function(slide) {
+    var total = 0;
+    var incrementals = Array.prototype.slice.call(slide.$$('.next'));
+    $$.forEach(incrementals, function(a, i) {
+        var order = i+1;
+        if (a.hasAttribute('next-order')) {
+            order = Number(a.getAttribute('next-order'));
+        }
+        if (order > total) {
+            total = order;
+        }
+    });
+    return total;
+  }
+
+  Dz.getCurrentSlideStep = function(slide) {
+    var total = 0;
+    var incrementals = Array.prototype.slice.call(slide.$$('.next'));
+    $$.forEach(incrementals, function(a, i) {
+        if (!a.hasAttribute('active')) {
+            return;
+        }
+        var order = i+1;
+        if (a.hasAttribute('next-order')) {
+            order = Number(a.getAttribute('next-order'));
+        }
+        if (order > total) {
+            total = order;
+        }
+    });
+    return total;
+  }
+
   Dz.setIncremental = function(aStep) {
-    this.step = aStep;
-    var incrementals = Array.prototype.slice.call(this.slides[this.idx - 1].$$('.next')).sort(function(a, b) {
-            return Number(a.getAttribute('next-order')) - Number(b.getAttribute('next-order'));
-          });
-    var next = incrementals[this.step - 1];
-    if (next) {
-      next.setAttribute('active', true);
-    } else {
-      this.setCursor(this.idx, 0);
+    var self = this;
+    self.step = aStep;
+    var incrementals = Array.prototype.slice.call(self.slides[self.idx-1].$$('.next'));
+    $$.forEach(incrementals, function(a, i) {
+        var order = i+1;
+        if (a.hasAttribute('next-order')) {
+            order = Number(a.getAttribute('next-order'));
+        }
+        var show = true;
+        if (a.hasAttribute('hide-after')) {
+            show = (Number(a.getAttribute('hide-after')) >= aStep);
+        }
+        if((aStep >= order) && show) {
+            a.setAttribute('active', true);
+        } else {
+            a.removeAttribute('active');
+        }
+    });
+    if (incrementals.length == 0) {
+        self.setCursor(self.idx, 0);
     }
-    return next;
   }
 
   Dz.goFullscreen = function() {
@@ -673,7 +716,7 @@
     var slide = $("section:nth-of-type("+ aIdx +")");
     if (!slide)
       return;
-    var steps = slide.$$('.next').length + 1,
+    var steps = this.getTotalSlideSteps(slide),
         slideSize = 100 / (this.slides.length - 1),
         stepSize = slideSize / steps;
     this.progressBar.style.width = ((aIdx - 1) * slideSize + aStep * stepSize) + '%';
