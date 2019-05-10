@@ -48,15 +48,15 @@
 <section>
     <h3>Even more incrementals</h3>
     <p>
-      <span class="next" next-order="3">They</span>
-      <span class="next" next-order="5">can</span>
-      <span class="next" next-order="2">even</span>
-      <span class="next" next-order="1" hide-after="7">appear</span>
-      <span class="next" next-order="8">disappear</span>
-      <span class="next" next-order="7">in</span>
-      <span class="next" next-order="4">any</span>
-      <span class="next" next-order="6">order</span>
-      <span class="next" next-order="8">!</span>
+      <span class="next" data-next-order="3">They</span>
+      <span class="next" data-next-order="5">can</span>
+      <span class="next" data-next-order="2">even</span>
+      <span class="next" data-next-order="1" data-hide-after="7">appear</span>
+      <span class="next" data-next-order="8">disappear</span>
+      <span class="next" data-next-order="7">in</span>
+      <span class="next" data-next-order="4">any</span>
+      <span class="next" data-next-order="6">order</span>
+      <span class="next" data-next-order="8">!</span>
     </p>
 </section>
 
@@ -652,8 +652,8 @@
     var incrementals = Array.prototype.slice.call(slide.$$('.next'));
     $$.forEach(incrementals, function(a, i) {
         var order = i+1;
-        if (a.hasAttribute('next-order')) {
-            order = Number(a.getAttribute('next-order'));
+        if (a.hasAttribute('data-next-order')) {
+            order = Number(a.getAttribute('data-next-order'));
         }
         if (order > total) {
             total = order;
@@ -670,8 +670,8 @@
             return;
         }
         var order = i+1;
-        if (a.hasAttribute('next-order')) {
-            order = Number(a.getAttribute('next-order'));
+        if (a.hasAttribute('data-next-order')) {
+            order = Number(a.getAttribute('data-next-order'));
         }
         if (order > total) {
             total = order;
@@ -686,12 +686,12 @@
     var incrementals = Array.prototype.slice.call(self.slides[self.idx-1].$$('.next'));
     $$.forEach(incrementals, function(a, i) {
         var order = i+1;
-        if (a.hasAttribute('next-order')) {
-            order = Number(a.getAttribute('next-order'));
+        if (a.hasAttribute('data-next-order')) {
+            order = Number(a.getAttribute('data-next-order'));
         }
         var show = true;
-        if (a.hasAttribute('hide-after')) {
-            show = (Number(a.getAttribute('hide-after')) >= aStep);
+        if (a.hasAttribute('data-hide-after')) {
+            show = (Number(a.getAttribute('data-hide-after')) >= aStep);
         }
         if((aStep >= order) && show) {
             a.setAttribute('active', true);
