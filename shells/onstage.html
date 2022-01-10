@@ -161,7 +161,7 @@
   };
   
   Dz.init = function() {
-    this.clock_start = 0;
+    this.resetClock();
     this.startClock();
     this.loadIframes();
   }
@@ -290,6 +290,9 @@
   }
 
   Dz.popup = function() {
+    // The pop-up window disables its video autoplay.
+    // With Firefox, using iframe src="..." allow="autoplay" throws a warning
+    // that the feature is not supported either.
     this.views.remote = window.open(this.url + "#" + this.idx, 'slides', 'width=800,height=600,personalbar=0,toolbar=0,scrollbars=1,resizable=1');
   }
   
@@ -300,8 +303,8 @@
     aWin.postMessage(aMsg.join(" "), "*");
   }
   
-  Dz.resetClock = function() { // + 3600000, because Date(0) is 01:00:00
-    this.clock_start = (new Date()).getTime() + 3600000;
+  Dz.resetClock = function() {
+    this.clock_start = (new Date()).getTime();
   }
 
   Dz.startClock = function() {
@@ -309,10 +312,10 @@
       return num < 10 ? '0' + num : num;
     }
     setInterval(function() {
-      var now = new Date((new Date()).getTime() - this.Dz.clock_start);
-      $("#hours").innerHTML   = addZero(now.getHours());
-      $("#minutes").innerHTML = addZero(now.getMinutes());
-      $("#seconds").innerHTML = addZero(now.getSeconds());
+      var elapsed = Math.floor(((new Date()).getTime() - Dz.clock_start) / 1000);
+      $("#hours").innerHTML   = addZero(Math.floor(elapsed / 3600));
+      $("#minutes").innerHTML = addZero(Math.floor(elapsed / 60) % 60);
+      $("#seconds").innerHTML = addZero(elapsed % 60);
     }, 1000);
   }
 
